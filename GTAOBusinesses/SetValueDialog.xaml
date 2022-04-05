@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GTAOBusinesses"
         mc:Ignorable="d"
-        Title="Set Value" Height="100" Width="200" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+        Title="Set Value" Height="100" Width="200" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>

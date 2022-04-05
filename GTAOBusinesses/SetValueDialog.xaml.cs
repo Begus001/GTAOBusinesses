@@ -46,6 +46,10 @@ namespace GTAOBusinesses
             {
                 btSet_Click(sender, null);
             }
+            else if (e.Key == Key.Escape)
+            {
+                Close();
+            }
         }
     }
 }
