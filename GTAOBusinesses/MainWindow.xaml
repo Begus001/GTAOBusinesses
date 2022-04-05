@@ -1,0 +1,58 @@
+﻿<Window x:Class="GTAOBusinesses.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GTAOBusinesses"
+        mc:Ignorable="d"
+        Title="GTAOBusinesses" Height="240" Width="540" ResizeMode="CanResize" MinWidth="540" MinHeight="240" MaxHeight="500">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="130"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Content="Bunker" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Height="26" Width="47" Grid.Row="2"/>
+        <Label Content="Cocaine" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="3" VerticalAlignment="Center" Height="26" Width="52"/>
+        <Label Content="Counterfeit" HorizontalAlignment="Center" Grid.Row="5" VerticalAlignment="Center" Height="26" Width="70" Margin="0,0,0,0"/>
+        <Label Content="Meth" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="4" VerticalAlignment="Center" Height="26" Width="38"/>
+        <Label Content="Business" HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="56" Grid.Row="1"/>
+        <Label Content="Supplies" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="54" Grid.Row="1"/>
+        <Label Content="Product" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="51" Grid.Row="1"/>
+        <ProgressBar x:Name="pbSupBunker" Grid.Column="1" Grid.Row="2" Margin="15,10,15,10" MouseDoubleClick="pbClick"/>
+        <ProgressBar x:Name="pbSupCocaine" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="3" VerticalAlignment="Stretch" Margin="15,10,15,10" MouseDoubleClick="pbClick"/>
+        <ProgressBar x:Name="pbSupMeth" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="4" VerticalAlignment="Stretch" Margin="15,10,15,10" MouseDoubleClick="pbClick"/>
+        <ProgressBar x:Name="pbSupCounterfeit" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="5" VerticalAlignment="Stretch" Margin="15,10,15,10" MouseDoubleClick="pbClick"/>
+        <ProgressBar x:Name="pbProdBunker" Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Stretch" Margin="15,10,15,10" MouseDoubleClick="pbClick"/>
+        <ProgressBar x:Name="pbProdCocaine" Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="3" VerticalAlignment="Stretch" Margin="15,10,15,10" MouseDoubleClick="pbClick"/>
+        <ProgressBar x:Name="pbProdMeth" Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="4" VerticalAlignment="Stretch" Margin="15,10,15,10" MouseDoubleClick="pbClick"/>
+        <ProgressBar x:Name="pbProdCounterfeit" Grid.Column="2" HorizontalAlignment="Stretch" Grid.Row="5" VerticalAlignment="Stretch" Margin="15,10,15,10" MouseDoubleClick="pbClick"/>
+        <Label Content="Actions" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Height="26" Width="49"/>
+        <Button x:Name="btResupplyBunker" Content="Resupply" Grid.Column="3" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Stretch" Click="btResupplyBunker_Click" Width="60" Margin="0,8,0,8"/>
+        <Button x:Name="btResupplyCocaine" Content="Resupply" Grid.Column="3" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Stretch" Click="btResupplyCocaine_Click" Width="60" Margin="0,8,0,8"/>
+        <Button x:Name="btResupplyMeth" Content="Resupply" Grid.Column="3" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Stretch" Click="btResupplyMeth_Click" Width="60" Margin="0,8,0,8"/>
+        <Button x:Name="btResupplyCounterfeit" Content="Resupply" Grid.Column="3" HorizontalAlignment="Left" Grid.Row="5" VerticalAlignment="Stretch" Click="btResupplyCounterfeit_Click" Width="60" Margin="0,8,0,8"/>
+        <Button x:Name="btSellBunker" Content="Sell" Grid.Column="3" HorizontalAlignment="Right" Margin="0,8,5,8" Grid.Row="2" VerticalAlignment="Stretch" Click="btSellBunker_Click" Width="60"/>
+        <Button x:Name="btSellCocaine" Content="Sell" Grid.Column="3" HorizontalAlignment="Right" Margin="0,8,5,8" Grid.Row="3" VerticalAlignment="Stretch" Click="btSellCocaine_Click" Width="60"/>
+        <Button x:Name="btSellMeth" Content="Sell" Grid.Column="3" HorizontalAlignment="Right" Margin="0,8,5,8" Grid.Row="4" VerticalAlignment="Stretch" Click="btSellMeth_Click" Width="60"/>
+        <Button x:Name="btSellCounterfeit" Content="Sell" Grid.Column="3" HorizontalAlignment="Right" Margin="0,8,5,8" Grid.Row="5" VerticalAlignment="Stretch" Click="btSellCounterfeit_Click" Width="60"/>
+        <Button x:Name="btPause" Content="Pause" Margin="10,10,10,10" Click="btPause_Click"/>
+        <Label x:Name="lbSupBunker" Content="00:00:00" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" FontSize="14" IsHitTestVisible="False"/>
+        <Label x:Name="lbSupCocaine" Content="00:00:00" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="3" VerticalAlignment="Center" FontSize="14" IsHitTestVisible="False"/>
+        <Label x:Name="lbSupMeth" Content="00:00:00" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="4" VerticalAlignment="Center" FontSize="14" IsHitTestVisible="False"/>
+        <Label x:Name="lbSupCounterfeit" Content="00:00:00" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="5" VerticalAlignment="Center" FontSize="14" IsHitTestVisible="False"/>
+        <Label x:Name="lbProdBunker" Content="00:00:00" Grid.Column="2" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" FontSize="14" IsHitTestVisible="False"/>
+        <Label x:Name="lbProdCocaine" Content="00:00:00" Grid.Column="2" HorizontalAlignment="Center" Grid.Row="3" VerticalAlignment="Center" FontSize="14" IsHitTestVisible="False"/>
+        <Label x:Name="lbProdMeth" Content="00:00:00" Grid.Column="2" HorizontalAlignment="Center" Grid.Row="4" VerticalAlignment="Center" FontSize="14" IsHitTestVisible="False"/>
+        <Label x:Name="lbProdCounterfeit" Content="00:00:00" Grid.Column="2" HorizontalAlignment="Center" Grid.Row="5" VerticalAlignment="Center" FontSize="14" IsHitTestVisible="False"/>
+    </Grid>
+</Window>
