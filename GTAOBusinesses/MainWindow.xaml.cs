@@ -272,34 +272,42 @@ namespace GTAOBusinesses
             {
                 case "pbSupBunker":
                     businesses[0].SetSupplyBars(val);
+                    btResupplyBunker.ClearValue(Button.BackgroundProperty);
                     break;
 
                 case "pbSupCocaine":
                     businesses[1].SetSupplyBars(val);
+                    btResupplyCocaine.ClearValue(Button.BackgroundProperty);
                     break;
 
                 case "pbSupMeth":
                     businesses[2].SetSupplyBars(val);
+                    btResupplyMeth.ClearValue(Button.BackgroundProperty);
                     break;
 
                 case "pbSupCounterfeit":
                     businesses[3].SetSupplyBars(val);
+                    btResupplyCounterfeit.ClearValue(Button.BackgroundProperty);
                     break;
 
                 case "pbProdBunker":
                     businesses[0].SetProductBars(val);
+                    btSellBunker.ClearValue(Button.BackgroundProperty);
                     break;
 
                 case "pbProdCocaine":
                     businesses[1].SetProductBars(val);
+                    btSellCocaine.ClearValue(Button.BackgroundProperty);
                     break;
 
                 case "pbProdMeth":
                     businesses[2].SetProductBars(val);
+                    btSellMeth.ClearValue(Button.BackgroundProperty);
                     break;
 
                 case "pbProdCounterfeit":
                     businesses[3].SetProductBars(val);
+                    btSellCounterfeit.ClearValue(Button.BackgroundProperty);
                     break;
 
                 default:
