@@ -25,10 +25,10 @@ namespace GTAOBusinesses
         private const int methSup = 2 * 3600 + 34 * 60;
         private const int counterSup = 2 * 3600 + 50 * 60;
 
-        private const int bunkerProd = (bunkerSup - 10 * 60) * 5;
-        private const int cocaineProd = (int)((cocaineSup - 10 * 60) * 2.5);
-        private const int methProd = (int)((methSup - 10 * 60) * 2.5);
-        private const int counterProd = (counterSup - 10 * 60) * 2;
+        private const int bunkerProd = bunkerSup * 5;
+        private const int cocaineProd = (int)(cocaineSup * 2.5);
+        private const int methProd = (int)(methSup * 2.5);
+        private const int counterProd = counterSup * 2;
 
         private readonly Business[] businesses = new Business[4];
 
