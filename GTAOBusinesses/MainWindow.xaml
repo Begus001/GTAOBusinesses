@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GTAOBusinesses"
         mc:Ignorable="d"
-        Title="GTAOBusinesses" Height="240" Width="540" ResizeMode="CanResize" MinWidth="540" MinHeight="240" MaxHeight="500">
+        Title="GTAOBusinesses" Height="240" Width="540" ResizeMode="CanResize" MinWidth="540" MinHeight="240">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80"/>
