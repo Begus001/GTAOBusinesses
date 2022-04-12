@@ -20,8 +20,9 @@ namespace GTAOBusinesses
 {
     public partial class MainWindow : Window
     {
-        private readonly string saveLocation = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
-        private const string filename = "state.txt";
+        private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
+        private const string stateFilename = "state.txt";
+        private readonly string statePath;
 
         private const int numBusinesses = 4;
 
@@ -46,6 +47,8 @@ namespace GTAOBusinesses
         {
             InitializeComponent();
 
+            statePath = stateDir + stateFilename;
+
             businesses[0] = new Business(bunkerSup, bunkerProd, pbSupBunker, pbProdBunker, lbSupBunker, lbProdBunker, btResupplyBunker, btSellBunker);
             businesses[1] = new Business(cocaineSup, cocaineProd, pbSupCocaine, pbProdCocaine, lbSupCocaine, lbProdCocaine, btResupplyCocaine, btSellCocaine);
             businesses[2] = new Business(methSup, methProd, pbSupMeth, pbProdMeth, lbSupMeth, lbProdMeth, btResupplyMeth, btSellMeth);
@@ -62,23 +65,33 @@ namespace GTAOBusinesses
 
         private void load()
         {
-            if (!File.Exists(saveLocation + filename))
+            if (!File.Exists(statePath))
             {
-                Directory.CreateDirectory(saveLocation);
+                Directory.CreateDirectory(stateDir);
                 save();
                 return;
             }
 
-            StreamReader file = new StreamReader(saveLocation + filename);
+            StreamReader file = new StreamReader(statePath);
 
-            for (int i = 0; i < numBusinesses; i++)
+            try
             {
-                businesses[i].SetSupplySeconds(Convert.ToInt32(file.ReadLine()));
-                businesses[i].SetProductSeconds(Convert.ToInt32(file.ReadLine()));
+                for (int i = 0; i < numBusinesses; i++)
+                {
+                    businesses[i].SetSupplySeconds(Convert.ToInt32(file.ReadLine()));
+                    businesses[i].SetProductSeconds(Convert.ToInt32(file.ReadLine()));
 
-                int resupplyTime = Convert.ToInt32(file.ReadLine());
-                if (resupplyTime > 0)
-                    businesses[i].SetResupplyTimeLeft(resupplyTime);
+                    int resupplyTime = Convert.ToInt32(file.ReadLine());
+                    if (resupplyTime > 0)
+                        businesses[i].SetResupplyTimeLeft(resupplyTime);
+                }
+            }
+            catch
+            {
+                file.Close();
+                File.Move(statePath, stateDir + "state.txt.bak", true);
+                save();
+                MessageBox.Show("The save file (" + statePath + ") could not be read, a clean one has been created and the old one renamed.", "Save file corrupted");
             }
 
             file.Close();
@@ -86,7 +99,7 @@ namespace GTAOBusinesses
 
         private void save()
         {
-            StreamWriter file = new StreamWriter(saveLocation + filename, false);
+            StreamWriter file = new StreamWriter(statePath, false);
 
             for (int i = 0; i < numBusinesses; i++)
             {
