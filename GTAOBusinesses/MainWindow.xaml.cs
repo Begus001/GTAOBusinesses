@@ -164,7 +164,6 @@ namespace GTAOBusinesses
             if (isRunning)
             {
                 btPause.Background = Brushes.MediumSeaGreen;
-                load();
             }
             else
             {
