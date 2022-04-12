@@ -20,7 +20,8 @@ namespace GTAOBusinesses
 {
     public partial class MainWindow : Window
     {
-        private const string saveLocation = "state.txt";
+        private readonly string saveLocation = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
+        private const string filename = "state.txt";
 
         private const int numBusinesses = 4;
 
@@ -61,13 +62,14 @@ namespace GTAOBusinesses
 
         private void load()
         {
-            if (!File.Exists(saveLocation))
+            if (!File.Exists(saveLocation + filename))
             {
+                Directory.CreateDirectory(saveLocation);
                 save();
                 return;
             }
 
-            StreamReader file = new StreamReader(saveLocation);
+            StreamReader file = new StreamReader(saveLocation + filename);
 
             for (int i = 0; i < numBusinesses; i++)
             {
@@ -84,7 +86,7 @@ namespace GTAOBusinesses
 
         private void save()
         {
-            StreamWriter file = new StreamWriter(saveLocation, false);
+            StreamWriter file = new StreamWriter(saveLocation + filename, false);
 
             for (int i = 0; i < numBusinesses; i++)
             {
