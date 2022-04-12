@@ -20,6 +20,8 @@ namespace GTAOBusinesses
 {
     public partial class MainWindow : Window
     {
+        private const string saveLocation = "state.txt";
+
         private const int numBusinesses = 4;
 
         private const int bunkerSup = 2 * 3600 + 24 * 60;
@@ -59,7 +61,13 @@ namespace GTAOBusinesses
 
         private void load()
         {
-            StreamReader file = new StreamReader("state.txt");
+            if (!File.Exists(saveLocation))
+            {
+                save();
+                return;
+            }
+
+            StreamReader file = new StreamReader(saveLocation);
 
             for (int i = 0; i < numBusinesses; i++)
             {
@@ -76,20 +84,14 @@ namespace GTAOBusinesses
 
         private void save()
         {
-            StreamWriter file = new StreamWriter("state.txt", false);
+            StreamWriter file = new StreamWriter(saveLocation, false);
 
-            file.WriteLine(businesses[0].GetSupplySeconds().ToString());
-            file.WriteLine(businesses[0].GetProductSeconds().ToString());
-            file.WriteLine(businesses[0].GetResupplyTimeLeft().ToString());
-            file.WriteLine(businesses[1].GetSupplySeconds().ToString());
-            file.WriteLine(businesses[1].GetProductSeconds().ToString());
-            file.WriteLine(businesses[1].GetResupplyTimeLeft().ToString());
-            file.WriteLine(businesses[2].GetSupplySeconds().ToString());
-            file.WriteLine(businesses[2].GetProductSeconds().ToString());
-            file.WriteLine(businesses[2].GetResupplyTimeLeft().ToString());
-            file.WriteLine(businesses[3].GetSupplySeconds().ToString());
-            file.WriteLine(businesses[3].GetProductSeconds().ToString());
-            file.WriteLine(businesses[3].GetResupplyTimeLeft().ToString());
+            for (int i = 0; i < numBusinesses; i++)
+            {
+                file.WriteLine(businesses[i].GetSupplySeconds().ToString());
+                file.WriteLine(businesses[i].GetProductSeconds().ToString());
+                file.WriteLine(businesses[i].GetResupplyTimeLeft().ToString());
+            }
 
             file.Close();
         }
