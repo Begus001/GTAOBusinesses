@@ -4,6 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Threading;
+using System.Windows;
+using System.Diagnostics;
 
 namespace GTAOBusinesses
 {
@@ -14,16 +19,85 @@ namespace GTAOBusinesses
         private int supplySeconds;
         private int productSeconds;
 
-        private Timer timer = new Timer(1000);
+        private bool isBeingResupplied = false;
+        private bool isPaused = false;
 
-        public Business(int supplyFullSeconds, int productFullSeconds)
+        private ProgressBar supplyBar;
+        private ProgressBar productBar;
+        private Label supplyLabel;
+        private Label productLabel;
+        private Button resupplyBtn;
+        private Button sellBtn;
+
+        private const int resupplyTime = 10 * 60 - 1;
+        private int resupplyCounter = 0;
+
+        private readonly Timer timer = new(1000);
+        private readonly Timer resupplyTimer = new(1000);
+
+        public Business(int supplyFullSeconds, int productFullSeconds, ProgressBar supplyBar, ProgressBar productBar, Label supplyLabel, Label productLabel, Button resupplyBtn, Button sellBtn)
         {
             this.supplyFullSeconds = supplyFullSeconds;
             this.productFullSeconds = productFullSeconds;
             productSeconds = productFullSeconds;
+
             timer.Elapsed += tick;
             timer.AutoReset = true;
-            timer.Enabled = true;
+            timer.Start();
+
+            resupplyTimer.Elapsed += resupplyTick;
+            resupplyTimer.AutoReset = true;
+            resupplyTimer.Start();
+
+            this.supplyBar = supplyBar;
+            this.productBar = productBar;
+            this.supplyLabel = supplyLabel;
+            this.productLabel = productLabel;
+            this.resupplyBtn = resupplyBtn;
+            this.sellBtn = sellBtn;
+
+            supplyBar.Maximum = supplyFullSeconds;
+            productBar.Maximum = productFullSeconds;
+        }
+
+        private string clockFormat(int secs)
+        {
+            return string.Format("{0:D2}:{1:D2}:{2:D2}", secs / 3600, secs / 60 % 60, secs % 60);
+        }
+
+        private void updateUI()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                supplyBar.Value = supplySeconds;
+                productBar.Value = productFullSeconds - productSeconds;
+
+                supplyLabel.Content = clockFormat(supplySeconds);
+                productLabel.Content = clockFormat(productSeconds);
+
+                if (supplySeconds <= 0 && !isBeingResupplied)
+                    resupplyBtn.Background = Brushes.DarkOrange;
+                else
+                    resupplyBtn.ClearValue(Control.BackgroundProperty);
+                
+                if (productSeconds <= 0)
+                    sellBtn.Background = Brushes.MediumVioletRed;
+                else
+                    sellBtn.ClearValue(Control.BackgroundProperty);
+
+                if (isBeingResupplied)
+                {
+                    supplyBar.Background = Brushes.LightGoldenrodYellow;
+                    resupplyBtn.Background = Brushes.LightGoldenrodYellow;
+                    resupplyBtn.Content = "Cancel";
+                    supplyLabel.Content += " (Supplies in " + clockFormat(resupplyCounter) + ")";
+                }
+                else
+                {
+                    supplyBar.ClearValue(Control.BackgroundProperty);
+                    resupplyBtn.Content = "Resupply";
+                }
+            });
         }
 
         private void tick(Object source, ElapsedEventArgs e)
@@ -33,16 +107,24 @@ namespace GTAOBusinesses
                 supplySeconds--;
                 productSeconds--;
             }
+            updateUI();
         }
 
-        public void SetSupplyBars(double bars)
+        private void resupplyTick(Object source, ElapsedEventArgs e)
         {
-            SetSupplySeconds((int)(supplyFullSeconds * (bars / 5.0d)));
-        }
+            if (resupplyCounter <= 0 && isBeingResupplied)
+            {
+                resupplyTimer.Stop();
 
-        public void SetProductBars(double bars)
-        {
-            SetProductSeconds((int)(productFullSeconds - productFullSeconds * (bars / 5.0d)));
+                supplySeconds = supplyFullSeconds;
+                isBeingResupplied = false;
+
+                updateUI();
+            }
+            else if (!isPaused && isBeingResupplied)
+            {
+                resupplyCounter--;
+            }
         }
 
         public int GetSupplySeconds()
@@ -55,12 +137,19 @@ namespace GTAOBusinesses
             return productSeconds;
         }
 
+        public int GetResupplyTimeLeft()
+        {
+            return resupplyCounter;
+        }
+
         public void SetSupplySeconds(int secs)
         {
             if (secs > supplyFullSeconds || secs < 0)
                 return;
 
             supplySeconds = secs;
+
+            updateUI();
         }
 
         public void SetProductSeconds(int secs)
@@ -69,26 +158,60 @@ namespace GTAOBusinesses
                 return;
 
             productSeconds = secs;
+
+            updateUI();
+        }
+
+        public void SetSupplyBars(double bars)
+        {
+            SetSupplySeconds((int)(supplyFullSeconds * (bars / 5.0d)));
+        }
+
+        public void SetProductBars(double bars)
+        {
+            SetProductSeconds((int)(productFullSeconds - productFullSeconds * (bars / 5.0d)));
+        }
+
+        public void SetResupplyTimeLeft(int resupplyTimeLeft)
+        {
+            Resupply();
+            resupplyCounter = resupplyTimeLeft;
         }
 
         public void Resupply()
         {
-            supplySeconds = supplyFullSeconds;
+            if (!isBeingResupplied)
+            {
+                resupplyCounter = resupplyTime;
+                isBeingResupplied = true;
+            }
+            else
+            {
+                resupplyCounter = 0;
+                isBeingResupplied = false;
+            }
+            updateUI();
         }
 
         public void SellProduct()
         {
             productSeconds = productFullSeconds;
+
+            updateUI();
         }
 
         public void Pause()
         {
-            timer.Enabled = false;
+            timer.Stop();
+            resupplyTimer.Stop();
+            isPaused = true;
         }
 
         public void Start()
         {
-            timer.Enabled = true;
+            timer.Start();
+            resupplyTimer.Start();
+            isPaused = false;
         }
     }
 }
