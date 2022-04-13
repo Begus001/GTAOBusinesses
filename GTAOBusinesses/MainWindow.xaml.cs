@@ -17,12 +17,36 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace GTAOBusinesses
 {
+    [Flags]
+    public enum ThreadAccess : int
+    {
+        TERMINATE = (0x0001),
+        SUSPEND_RESUME = (0x0002),
+        GET_CONTEXT = (0x0008),
+        SET_CONTEXT = (0x0010),
+        SET_INFORMATION = (0x0020),
+        QUERY_INFORMATION = (0x0040),
+        SET_THREAD_TOKEN = (0x0080),
+        IMPERSONATE = (0x0100),
+        DIRECT_IMPERSONATION = (0x0200)
+    }
+
     public partial class MainWindow : Window
     {
-        private readonly Version version = new Version("1.0");
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
+        [DllImport("kernel32.dll")]
+        private static extern uint SuspendThread(IntPtr hThread);
+        [DllImport("kernel32.dll")]
+        private static extern int ResumeThread(IntPtr hThread);
+        [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool CloseHandle(IntPtr handle);
+
+        private readonly Version version = new Version("1.2");
 
         private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
         private const string stateFilename = "state.txt";
@@ -46,6 +70,9 @@ namespace GTAOBusinesses
         private bool isRunning = true;
 
         public static double val = -1.0d;
+
+        bool suspended = false;
+        System.Threading.Thread suspendThread;
 
         public MainWindow()
         {
@@ -290,6 +317,116 @@ namespace GTAOBusinesses
         private void btUpdate_Click(object sender, RoutedEventArgs e)
         {
             checkUpdate();
+        }
+
+        private static bool SuspendProcess()
+        {
+            Process process = null;
+            foreach (Process item in Process.GetProcesses())
+            {
+                Debug.WriteLine(item.ProcessName);
+                if (item.ProcessName == "GTA5")
+                {
+                    process = item;
+                }
+            }
+
+            if (process == null)
+            {
+                MessageBox.Show("Process GTA5.exe not found!", "Could not suspend", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            foreach (ProcessThread pT in process.Threads)
+            {
+                IntPtr pOpenThread = OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint)pT.Id);
+
+                if (pOpenThread == IntPtr.Zero)
+                {
+                    continue;
+                }
+
+                SuspendThread(pOpenThread);
+
+                CloseHandle(pOpenThread);
+            }
+            return true;
+        }
+
+        public static bool ResumeProcess()
+        {
+            Process process = null;
+            foreach (Process item in Process.GetProcesses())
+            {
+                Debug.WriteLine(item.ProcessName);
+                if (item.ProcessName == "GTA5")
+                {
+                    process = item;
+                }
+            }
+
+            if (process == null)
+            {
+                MessageBox.Show("Process GTA5.exe not found!", "Could not resume", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            foreach (ProcessThread pT in process.Threads)
+            {
+                IntPtr pOpenThread = OpenThread(ThreadAccess.SUSPEND_RESUME, false, (uint)pT.Id);
+
+                if (pOpenThread == IntPtr.Zero)
+                {
+                    continue;
+                }
+
+                var suspendCount = 0;
+                do
+                {
+                    suspendCount = ResumeThread(pOpenThread);
+                } while (suspendCount > 0);
+
+                CloseHandle(pOpenThread);
+            }
+            return true;
+        }
+
+        private void btSuspend_Click(object sender, RoutedEventArgs e)
+        {
+            if (suspended)
+            {
+                suspendThread.Abort();
+                ResumeProcess();
+                btSuspend.Content = "Solo Session";
+                btSuspend.ClearValue(Control.BackgroundProperty);
+                suspended = false;
+                return;
+            }
+
+            suspendThread = new System.Threading.Thread(() =>
+            {
+                if (!SuspendProcess())
+                    return;
+                suspended = true;
+
+                Dispatcher.Invoke(() => btSuspend.Background = Brushes.LightGoldenrodYellow);
+                for (int i = 9; i > 0; i--)
+                {
+                    Dispatcher.Invoke(() => btSuspend.Content = i.ToString());
+                    System.Threading.Thread.Sleep(1000);
+                }
+                Dispatcher.Invoke(() =>
+                { 
+                    btSuspend.Content = "Solo Session";
+                    btSuspend.ClearValue(Control.BackgroundProperty);
+                });
+
+                ResumeProcess();
+
+                suspended = false;
+            });
+
+            suspendThread.Start();
         }
     }
 }
