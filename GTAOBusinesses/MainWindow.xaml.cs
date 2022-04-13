@@ -118,25 +118,25 @@ namespace GTAOBusinesses
 
         private void btResupplyBunker_Click(object sender, RoutedEventArgs e)
         {
-            businesses[0].Resupply();
+            businesses[0].ToggleResupply();
             save();
         }
 
         private void btResupplyCocaine_Click(object sender, RoutedEventArgs e)
         {
-            businesses[1].Resupply();
+            businesses[1].ToggleResupply();
             save();
         }
 
         private void btResupplyMeth_Click(object sender, RoutedEventArgs e)
         {
-            businesses[2].Resupply();
+            businesses[2].ToggleResupply();
             save();
         }
 
         private void btResupplyCounterfeit_Click(object sender, RoutedEventArgs e)
         {
-            businesses[3].Resupply();
+            businesses[3].ToggleResupply();
             save();
         }
 

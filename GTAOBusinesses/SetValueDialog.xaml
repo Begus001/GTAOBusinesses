@@ -5,14 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GTAOBusinesses"
         mc:Ignorable="d"
-        Title="Set Value" Height="100" Width="200" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Set Value" Height="100" Width="200" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MinWidth="200" MinHeight="100" MaxWidth="200" MaxHeight="100">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="6*"/>
         </Grid.RowDefinitions>
         <Label Content="Enter amount of bars in game:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox x:Name="tbValue" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" Width="140" KeyDown="tbValue_KeyDown"/>
-        <Button x:Name="btSet" Content="Set" HorizontalAlignment="Right" Margin="0,0,10,0" Grid.Row="1" VerticalAlignment="Center" Width="35" Click="btSet_Click"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="tbValue" Margin="5,5,5,5" Grid.Column="0" MaxLines="1" MaxLength="4" TextWrapping="Wrap" KeyDown="tbValue_KeyDown" VerticalContentAlignment="Center"/>
+            <Button x:Name="btSet" Content="Set" Margin="0,5,5,5" Grid.Column="1" Click="btSet_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="0,0,0,0"/>
+        </Grid>
     </Grid>
 </Window>

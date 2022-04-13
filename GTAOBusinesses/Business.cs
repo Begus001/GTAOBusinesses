@@ -174,11 +174,11 @@ namespace GTAOBusinesses
 
         public void SetResupplyTimeLeft(int resupplyTimeLeft)
         {
-            Resupply();
+            ToggleResupply();
             resupplyCounter = resupplyTimeLeft;
         }
 
-        public void Resupply()
+        public void ToggleResupply()
         {
             if (!isBeingResupplied)
             {
