@@ -252,7 +252,7 @@ namespace GTAOBusinesses
         private void update()
         {
             string exepath = Assembly.GetEntryAssembly().Location;
-            Process.Start("AutoUpdater.exe", exepath);
+            Process.Start("AutoUpdater.exe", '"' + exepath + '"');
             Environment.Exit(0);
         }
 

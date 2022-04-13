@@ -15,14 +15,15 @@ namespace AutoUpdater
         private static readonly string tmp = dir + "GTAOBusinesses.exe";
         static void Main(string[] args)
         {
+            string exepath;
             if (args.Length < 1)
-            { 
-                Console.WriteLine("No executable path was given!");
-                Console.ReadLine();
-                return;
+            {
+                exepath = @".\GTAOBusinesses.exe";
             }
-
-            Thread.Sleep(1000);
+            else
+            {
+                exepath = args[0];
+            }
 
             Directory.CreateDirectory(dir);
             WebRequest req = WebRequest.CreateHttp("http://begus.ddns.net/gtaoupdate/GTAOBusinesses.exe");
@@ -35,15 +36,17 @@ namespace AutoUpdater
 
             w.Close();
 
-            if (File.Exists(args[0]))
-                File.Delete(args[0]);
+            if (File.Exists(exepath))
+                File.Delete(exepath);
 
-            File.Move(tmp, args[0]);
+            Thread.Sleep(500);
+
+            File.Move(tmp, exepath);
 
             r.Close();
             resp.Close();
 
-            Process.Start(args[0]);
+            Process.Start(exepath);
         }
     }
 }
