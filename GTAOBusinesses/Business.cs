@@ -32,8 +32,8 @@ namespace GTAOBusinesses
         private const int resupplyTime = 10 * 60 - 1;
         private int resupplyCounter = 0;
 
-        private readonly Timer timer = new(1000);
-        private readonly Timer resupplyTimer = new(1000);
+        private readonly Timer timer = new Timer(1000);
+        private readonly Timer resupplyTimer = new Timer(1000);
 
         public Business(int supplyFullSeconds, int productFullSeconds, ProgressBar supplyBar, ProgressBar productBar, Label supplyLabel, Label productLabel, Button resupplyBtn, Button sellBtn)
         {

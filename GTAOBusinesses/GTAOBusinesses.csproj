@@ -2,9 +2,11 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+    <StartupObject>GTAOBusinesses.App</StartupObject>
   </PropertyGroup>
 
 </Project>

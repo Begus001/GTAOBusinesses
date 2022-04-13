@@ -15,11 +15,15 @@ using System.Windows.Shapes;
 using System.Timers;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Reflection;
 
 namespace GTAOBusinesses
 {
     public partial class MainWindow : Window
     {
+        private readonly Version version = new Version("1.0");
+
         private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
         private const string stateFilename = "state.txt";
         private readonly string statePath;
@@ -89,7 +93,9 @@ namespace GTAOBusinesses
             catch
             {
                 file.Close();
-                File.Move(statePath, stateDir + "state.txt.bak", true);
+                if (File.Exists(stateDir + "state.txt.bak"))
+                    File.Delete(stateDir + "state.txt.bak");
+                File.Move(statePath, stateDir + "state.txt.bak");
                 save();
                 MessageBox.Show("The save file (" + statePath + ") could not be read, a clean one has been created and the old one renamed.", "Save file corrupted");
             }
@@ -240,7 +246,50 @@ namespace GTAOBusinesses
 
         private void btAbout_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Benjamin Goisser 2022\nhttps://github.com/Begus001", "About");
+            MessageBox.Show("GTAOBusinesses version " + version.ToString() + "\nBenjamin Goisser 2022\nhttps://github.com/Begus001", "About");
+        }
+
+        private void update()
+        {
+            string exepath = Assembly.GetEntryAssembly().Location;
+            Process.Start("AutoUpdater.exe", exepath);
+            Environment.Exit(0);
+        }
+
+        private void checkUpdate()
+        {
+            WebRequest req = WebRequest.CreateHttp("http://begus.ddns.net/gtaoupdate/version.txt");
+            WebResponse resp = req.GetResponse();
+            Version newVersion;
+            StreamReader s = new StreamReader(resp.GetResponseStream());
+
+            if (!Version.TryParse(s.ReadToEnd(), out newVersion))
+            {
+                MessageBox.Show("Couldn't check if new version available", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (version < newVersion)
+            {
+                MessageBoxResult res = MessageBox.Show(string.Format("New version available! ({0} -> {1})\nDo you want to update?", version.ToString(), newVersion.ToString()), "Update", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                if (res == MessageBoxResult.Yes)
+                {
+                    update();
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Already up to date!", "No update", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+            s.Close();
+            resp.Close();
+        }
+
+        private void btUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            checkUpdate();
         }
     }
 }

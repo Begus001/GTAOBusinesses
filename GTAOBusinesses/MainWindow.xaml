@@ -13,17 +13,18 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="80"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="btPause" Content="Pause" Margin="10,10,0,10" Click="btPause_Click" Grid.Column="0" BorderThickness="0.5" HorizontalAlignment="Left" Width="65"/>
-            <Button x:Name="btAbout" Content="About" Margin="0,10,10,10" Click="btAbout_Click" Grid.Column="7" HorizontalAlignment="Right" Width="65"/>
+            <Button x:Name="btPause" Content="Pause" Margin="10,10,10,10" Click="btPause_Click" Grid.Column="0" BorderThickness="0.5"/>
+            <Button x:Name="btUpdate" Content="Update" Margin="10,10,10,10" Click="btUpdate_Click" Grid.Column="6"/>
+            <Button x:Name="btAbout" Content="About" Margin="10,10,10,10" Click="btAbout_Click" Grid.Column="7"/>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
