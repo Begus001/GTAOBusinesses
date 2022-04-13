@@ -111,7 +111,7 @@ namespace GTAOBusinesses
             file.Close();
         }
 
-        private void tick(Object source, ElapsedEventArgs e)
+        private void tick(object source, ElapsedEventArgs e)
         {
             save();
         }
@@ -236,6 +236,11 @@ namespace GTAOBusinesses
             }
 
             val = -1.0d;
+        }
+
+        private void btAbout_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Benjamin Goisser 2022\nhttps://github.com/Begus001", "About");
         }
     }
 }

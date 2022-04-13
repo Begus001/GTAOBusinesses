@@ -100,7 +100,7 @@ namespace GTAOBusinesses
             });
         }
 
-        private void tick(Object source, ElapsedEventArgs e)
+        private void tick(object source, ElapsedEventArgs e)
         {
             if (supplySeconds > 0 && productSeconds > 0)
             {
@@ -110,7 +110,7 @@ namespace GTAOBusinesses
             updateUI();
         }
 
-        private void resupplyTick(Object source, ElapsedEventArgs e)
+        private void resupplyTick(object source, ElapsedEventArgs e)
         {
             if (resupplyCounter <= 0 && isBeingResupplied)
             {
