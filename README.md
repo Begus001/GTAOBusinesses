@@ -1,4 +1,4 @@
 # GTAOBusinesses
 A management tool for GTA Online Businesses
 # Example
-![image](https://user-images.githubusercontent.com/43996495/163074015-389d35e8-c866-40bc-982e-67c8d69909be.png)
+![Example Image](https://user-images.githubusercontent.com/43996495/163236575-acf318c0-a3cd-4b32-ab0f-f815edec37b5.png)
