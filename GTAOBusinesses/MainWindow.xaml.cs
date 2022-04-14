@@ -46,7 +46,7 @@ namespace GTAOBusinesses
         [DllImport("kernel32.dll")]
         private static extern bool CloseHandle(IntPtr handle);
 
-        private readonly Version version = new Version("1.4");
+        private readonly Version version = new Version("1.4.1");
 
         private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
         private const string stateFilename = "state.txt";
@@ -71,7 +71,6 @@ namespace GTAOBusinesses
         private readonly Business[] businesses = new Business[numBusinesses];
 
         private readonly Timer saveTimer = new Timer(1000);
-        private bool isRunning = true;
 
         public static double val = -1.0d;
 
@@ -106,6 +105,8 @@ namespace GTAOBusinesses
             h.Add(Modifier.CTRL | Modifier.ALT, VirtualKey.Numpad5);
 
             h.HotkeyPressed += globalKeyHandler;
+
+            tick(null, null);
         }
 
         private void globalKeyHandler(HotkeyEventArgs e)
@@ -169,6 +170,24 @@ namespace GTAOBusinesses
 
         private void tick(object source, ElapsedEventArgs e)
         {
+            for (int i = 0; i < 4; i++)
+            {
+                if (settings.Paused)
+                    businesses[i].Pause();
+                else
+                    businesses[i].Start();
+            }
+            Dispatcher.Invoke(() =>
+            {
+                if (settings.Paused)
+                {
+                    btPause.Background = Brushes.MediumVioletRed;
+                }
+                else
+                {
+                    btPause.Background = Brushes.MediumSeaGreen;
+                }
+            });
             save();
         }
 
@@ -222,24 +241,8 @@ namespace GTAOBusinesses
 
         private void btPause_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < 4; i++)
-            {
-                if (isRunning)
-                    businesses[i].Pause();
-                else
-                    businesses[i].Start();
-            }
-
-            isRunning = !isRunning;
-
-            if (isRunning)
-            {
-                btPause.Background = Brushes.MediumSeaGreen;
-            }
-            else
-            {
-                btPause.Background = Brushes.MediumVioletRed;
-            }
+            settings.Paused = !settings.Paused;
+            tick(null, null);
         }
 
         private void pbClick(object sender, RoutedEventArgs e)

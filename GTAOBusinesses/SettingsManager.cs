@@ -15,6 +15,7 @@ namespace GTAOBusinesses
         public double WindowHeight { get; set; }
         public double WindowX { get; set; }
         public double WindowY { get; set; }
+        public bool Paused { get; set; }
         public string SaveLocation { get; set; }
 
         public SettingsManager(string saveLocation)
@@ -40,6 +41,7 @@ namespace GTAOBusinesses
             w.WriteLine(WindowHeight.ToString());
             w.WriteLine(WindowX.ToString());
             w.WriteLine(WindowY.ToString());
+            w.WriteLine(Paused.ToString());
             w.Close();
         }
 
@@ -53,6 +55,7 @@ namespace GTAOBusinesses
                 WindowHeight = Convert.ToDouble(r.ReadLine());
                 WindowX = Convert.ToDouble(r.ReadLine());
                 WindowY = Convert.ToDouble(r.ReadLine());
+                Paused = Convert.ToBoolean(r.ReadLine());
             }
             catch
             {
