@@ -46,7 +46,7 @@ namespace GTAOBusinesses
         [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool CloseHandle(IntPtr handle);
 
-        private readonly Version version = new Version("1.3");
+        private readonly Version version = new Version("1.3.1");
 
         private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
         private const string stateFilename = "state.txt";
