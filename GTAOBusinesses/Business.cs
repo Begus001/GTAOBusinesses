@@ -176,6 +176,7 @@ namespace GTAOBusinesses
         {
             ToggleResupply();
             resupplyCounter = resupplyTimeLeft;
+            updateUI();
         }
 
         public void ToggleResupply()
