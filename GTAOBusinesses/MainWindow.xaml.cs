@@ -46,11 +46,15 @@ namespace GTAOBusinesses
         [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool CloseHandle(IntPtr handle);
 
-        private readonly Version version = new Version("1.2");
+        private readonly Version version = new Version("1.3");
 
         private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
         private const string stateFilename = "state.txt";
+        private const string settingsFilename = "settings.txt";
         private readonly string statePath;
+        private readonly string settingsPath;
+
+        private readonly SettingsManager settings;
 
         private const int numBusinesses = 4;
 
@@ -79,6 +83,7 @@ namespace GTAOBusinesses
             InitializeComponent();
 
             statePath = stateDir + stateFilename;
+            settingsPath = stateDir + settingsFilename;
 
             businesses[0] = new Business(bunkerSup, bunkerProd, pbSupBunker, pbProdBunker, lbSupBunker, lbProdBunker, btResupplyBunker, btSellBunker);
             businesses[1] = new Business(cocaineSup, cocaineProd, pbSupCocaine, pbProdCocaine, lbSupCocaine, lbProdCocaine, btResupplyCocaine, btSellCocaine);
@@ -92,6 +97,10 @@ namespace GTAOBusinesses
             saveTimer.Start();
 
             load();
+
+            settings = new SettingsManager(settingsPath);
+            settings.RestoreWindowDimensions(this);
+            settings.RestoreWindowLocation(this);
         }
 
         private void load()
@@ -124,7 +133,8 @@ namespace GTAOBusinesses
                     File.Delete(stateDir + "state.txt.bak");
                 File.Move(statePath, stateDir + "state.txt.bak");
                 save();
-                MessageBox.Show("The save file (" + statePath + ") could not be read, a clean one has been created and the old one renamed.", "Save file corrupted");
+                MessageBox.Show("The state file (" + statePath + ") could not be read, a clean one has been created and the old one renamed.", "State file corrupted", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
 
             file.Close();
@@ -324,7 +334,6 @@ namespace GTAOBusinesses
             Process process = null;
             foreach (Process item in Process.GetProcesses())
             {
-                Debug.WriteLine(item.ProcessName);
                 if (item.ProcessName == "GTA5")
                 {
                     process = item;
@@ -358,7 +367,6 @@ namespace GTAOBusinesses
             Process process = null;
             foreach (Process item in Process.GetProcesses())
             {
-                Debug.WriteLine(item.ProcessName);
                 if (item.ProcessName == "GTA5")
                 {
                     process = item;
@@ -427,6 +435,27 @@ namespace GTAOBusinesses
             });
 
             suspendThread.Start();
+        }
+
+        private void btSettings_Click(object sender, RoutedEventArgs e)
+        {
+            Settings window = new Settings();
+            window.ShowDialog();
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            settings.SetWindowDimensions(this);
+        }
+
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            settings.SetWindowLocation(this);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            settings.Save();
         }
     }
 }

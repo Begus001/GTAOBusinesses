@@ -25,6 +25,8 @@ namespace AutoUpdater
                 exepath = args[0];
             }
 
+            Thread.Sleep(200);
+
             Directory.CreateDirectory(dir);
             WebRequest req = WebRequest.CreateHttp("http://begus.ddns.net/gtaoupdate/GTAOBusinesses.exe");
             WebResponse resp = req.GetResponse();
