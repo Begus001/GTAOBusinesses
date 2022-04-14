@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -11,7 +12,7 @@ using System.Windows.Interop;
 
 namespace GTAOBusinesses
 {
-    class HotkeyManager
+    public class HotkeyManager
     {
         [DllImport("user32.dll")]
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
@@ -21,20 +22,122 @@ namespace GTAOBusinesses
         private readonly IntPtr hwnd;
         private const int id = 0x42069911;
 
+        public readonly int NumActions;
+
+        public Tuple<ModifierKey, VirtualKey>[] Bindings { get; set; }
+
         public delegate void HotkeyPressedEventHandler(HotkeyEventArgs e);
         public event HotkeyPressedEventHandler HotkeyPressed;
 
-        public HotkeyManager(Window win)
+        public string SaveLocation { get; set; }
+
+        public HotkeyManager(Window win, string saveLocation)
         {
             hwnd = new WindowInteropHelper(win).EnsureHandle();
             HwndSource source = HwndSource.FromHwnd(hwnd);
             source.AddHook(HwndHook);
+
+            NumActions = Enum.GetNames(typeof(HotkeyAction)).Length;
+
+            Bindings = new Tuple<ModifierKey, VirtualKey>[NumActions];
+
+            SaveLocation = saveLocation;
+
+            if (!File.Exists(saveLocation))
+            {
+                SetDefault();
+                Save();
+            }
+            else
+            {
+                Load();
+            }
         }
 
-        public void Add(Modifier mod, VirtualKey vk)
+        public void Set(HotkeyAction action, ModifierKey mod, VirtualKey vk)
         {
-            RegisterHotKey(hwnd, id, (uint)mod, (uint)vk);
+            if (!RegisterHotKey(hwnd, (int)action, (uint)mod, (uint)vk))
+                return;
+
             Thread.Sleep(10);
+
+            Tuple<ModifierKey, VirtualKey> key = Tuple.Create(mod, vk);
+
+            Bindings[(uint)action] = Tuple.Create(mod, vk);
+        }
+
+        public void Unset(HotkeyAction action)
+        {
+            if (Bindings[(uint)action] != null)
+                Bindings[(uint)action] = null;
+
+            UnregisterHotKey(hwnd, (int)action);
+        }
+
+        public void Save()
+        {
+            StreamWriter w = new StreamWriter(SaveLocation, false);
+            for(int i = 0; i < NumActions; i++)
+            {
+                if (Bindings[i] == null)
+                {
+                    w.WriteLine();
+                }
+                else
+                {
+                    w.WriteLine(((uint)Bindings[i].Item1).ToString());
+                    w.WriteLine(((uint)Bindings[i].Item2).ToString());
+                }
+            }
+
+            w.Close();
+        }
+
+        public void Load()
+        {
+            StreamReader r = new StreamReader(File.Open(SaveLocation, FileMode.Open));
+
+            try
+            {
+                for (uint i = 0; i < NumActions; i++)
+                {
+                    string modStr = r.ReadLine();
+                    if (modStr == "")
+                        continue;
+
+                    ModifierKey mod = (ModifierKey)Convert.ToUInt32(modStr);
+                    VirtualKey key = (VirtualKey)Convert.ToUInt32(r.ReadLine());
+
+                    Set((HotkeyAction)i, mod, key);
+                }
+            }
+            catch
+            {
+                r.Close();
+                if (File.Exists(SaveLocation + ".bak"))
+                    File.Delete(SaveLocation + ".bak");
+                File.Move(SaveLocation, SaveLocation + ".bak");
+                SetDefault();
+                Save();
+                MessageBox.Show("The keymap file (" + SaveLocation + ") could not be read, a clean one has been created and the old one renamed.", "Keymap file corrupted", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            r.Close();
+        }
+
+        public void SetDefault()
+        {
+            Set(HotkeyAction.Pause, ModifierKey.CTRL, VirtualKey.NumPad0);
+            Set(HotkeyAction.SoloSession, ModifierKey.CTRL, VirtualKey.Add);
+            Set(HotkeyAction.ResupplyBunker, ModifierKey.CTRL, VirtualKey.NumPad1);
+            Set(HotkeyAction.ResupplyCocaine, ModifierKey.CTRL, VirtualKey.NumPad2);
+            Set(HotkeyAction.ResupplyMeth, ModifierKey.CTRL, VirtualKey.NumPad3);
+            Set(HotkeyAction.ResupplyCounterfeit, ModifierKey.CTRL, VirtualKey.NumPad4);
+            Set(HotkeyAction.SellBunker, ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad1);
+            Set(HotkeyAction.SellCocaine, ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad2);
+            Set(HotkeyAction.SellMeth, ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad3);
+            Set(HotkeyAction.SellCounterfeit, ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad4);
         }
 
         private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -42,45 +145,59 @@ namespace GTAOBusinesses
             const int WM_HOTKEY = 0x0312;
             if (msg == WM_HOTKEY)
             {
-                if (wParam.ToInt32() == id)
-                {
-                    int vkey = (((int)lParam >> 16) & 0xFFFF);
-                    int mod = (int)lParam & 0xFFFF;
-                    HotkeyPressed.Invoke(new HotkeyEventArgs { key = (uint)vkey, mod = (uint)mod });
-                }
+                ModifierKey mod = (ModifierKey)((uint)lParam & 0xFFFF);
+                VirtualKey vk = (VirtualKey)(((uint)lParam >> 16) & 0xFFFF);
+
+                HotkeyPressed.Invoke(new HotkeyEventArgs { key = vk, mod = mod, action = (HotkeyAction)wParam.ToInt32() });
+                handled = true;
             }
             return IntPtr.Zero;
         }
 
-        public static string ModToString(uint mod)
+        public static string ModToString(ModifierKey mod)
         {
             string str = "";
-            if ((mod & 2) != 0)
+            if (((uint)mod & 2) != 0)
             {
-                str += Modifier.CTRL.ToString();
+                str += ModifierKey.CTRL.ToString();
                 str += "+";
             }
-            if ((mod & 4) != 0)
+            if (((uint)mod & 4) != 0)
             {
-                str += Modifier.SHIFT.ToString();
+                str += ModifierKey.SHIFT.ToString();
                 str += "+";
             }
-            if ((mod & 1) != 0)
+            if (((uint)mod & 1) != 0)
             {
-                str += Modifier.ALT.ToString();
+                str += ModifierKey.ALT.ToString();
                 str += "+";
             }
             return str;
         }
     }
 
-    class HotkeyEventArgs : EventArgs
+    public class HotkeyEventArgs : EventArgs
     {
-        public uint key;
-        public uint mod;
+        public VirtualKey key;
+        public ModifierKey mod;
+        public HotkeyAction action; 
     }
 
-    public enum Modifier : uint
+    public enum HotkeyAction : uint
+    {
+        Pause,
+        SoloSession,
+        ResupplyBunker,
+        ResupplyCocaine,
+        ResupplyMeth,
+        ResupplyCounterfeit,
+        SellBunker,
+        SellCocaine,
+        SellMeth,
+        SellCounterfeit,
+    }
+
+    public enum ModifierKey : uint
     {
         NONE = 0x0000,
         ALT = 0x0001,
@@ -134,16 +251,16 @@ namespace GTAOBusinesses
         Insert = 0x2D,
         Delete = 0x2E,
         Help = 0x2F,
-        N0 = 0x30,
-        N1 = 0x31,
-        N2 = 0x32,
-        N3 = 0x33,
-        N4 = 0x34,
-        N5 = 0x35,
-        N6 = 0x36,
-        N7 = 0x37,
-        N8 = 0x38,
-        N9 = 0x39,
+        D0 = 0x30,
+        D1 = 0x31,
+        D2 = 0x32,
+        D3 = 0x33,
+        D4 = 0x34,
+        D5 = 0x35,
+        D6 = 0x36,
+        D7 = 0x37,
+        D8 = 0x38,
+        D9 = 0x39,
         A = 0x41,
         B = 0x42,
         C = 0x43,
@@ -174,16 +291,16 @@ namespace GTAOBusinesses
         RightWindows = 0x5C,
         Application = 0x5D,
         Sleep = 0x5F,
-        Numpad0 = 0x60,
-        Numpad1 = 0x61,
-        Numpad2 = 0x62,
-        Numpad3 = 0x63,
-        Numpad4 = 0x64,
-        Numpad5 = 0x65,
-        Numpad6 = 0x66,
-        Numpad7 = 0x67,
-        Numpad8 = 0x68,
-        Numpad9 = 0x69,
+        NumPad0 = 0x60,
+        NumPad1 = 0x61,
+        NumPad2 = 0x62,
+        NumPad3 = 0x63,
+        NumPad4 = 0x64,
+        NumPad5 = 0x65,
+        NumPad6 = 0x66,
+        NumPad7 = 0x67,
+        NumPad8 = 0x68,
+        NumPad9 = 0x69,
         Multiply = 0x6A,
         Add = 0x6B,
         Separator = 0x6C,

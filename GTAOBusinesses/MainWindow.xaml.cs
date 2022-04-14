@@ -46,13 +46,16 @@ namespace GTAOBusinesses
         [DllImport("kernel32.dll")]
         private static extern bool CloseHandle(IntPtr handle);
 
-        private readonly Version version = new Version("1.4.1");
+        private readonly Version version = new Version("1.5");
 
         private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
         private const string stateFilename = "state.txt";
         private const string settingsFilename = "settings.txt";
+        private const string keymapFilename = "keymap.txt";
         private readonly string statePath;
         private readonly string settingsPath;
+        private readonly string keymapPath;
+        private bool settingsOpen = false;
 
         private readonly SettingsManager settings;
 
@@ -72,10 +75,12 @@ namespace GTAOBusinesses
 
         private readonly Timer saveTimer = new Timer(1000);
 
-        public static double val = -1.0d;
+        private readonly HotkeyManager hotkeyManager;
 
         bool suspended = false;
         System.Threading.Thread suspendThread;
+
+        public static double val = -1.0d;
 
         public MainWindow()
         {
@@ -83,12 +88,13 @@ namespace GTAOBusinesses
 
             statePath = stateDir + stateFilename;
             settingsPath = stateDir + settingsFilename;
+            keymapPath = stateDir + keymapFilename;
 
             businesses[0] = new Business(bunkerSup, bunkerProd, pbSupBunker, pbProdBunker, lbSupBunker, lbProdBunker, btResupplyBunker, btSellBunker);
             businesses[1] = new Business(cocaineSup, cocaineProd, pbSupCocaine, pbProdCocaine, lbSupCocaine, lbProdCocaine, btResupplyCocaine, btSellCocaine);
             businesses[2] = new Business(methSup, methProd, pbSupMeth, pbProdMeth, lbSupMeth, lbProdMeth, btResupplyMeth, btSellMeth);
             businesses[3] = new Business(counterSup, counterProd, pbSupCounterfeit, pbProdCounterfeit, lbSupCounterfeit, lbProdCounterfeit, btResupplyCounterfeit, btSellCounterfeit);
-            
+
             btPause.Background = Brushes.MediumSeaGreen;
 
             saveTimer.Elapsed += tick;
@@ -101,19 +107,49 @@ namespace GTAOBusinesses
             settings.RestoreWindowDimensions(this);
             settings.RestoreWindowLocation(this);
 
-            HotkeyManager h = new HotkeyManager(this);
-            h.Add(Modifier.CTRL | Modifier.ALT, VirtualKey.Numpad5);
+            hotkeyManager = new HotkeyManager(this, keymapPath);
 
-            h.HotkeyPressed += globalKeyHandler;
+            hotkeyManager.HotkeyPressed += globalKeyHandler;
 
             tick(null, null);
         }
 
         private void globalKeyHandler(HotkeyEventArgs e)
         {
-            if ((VirtualKey)e.key == VirtualKey.Numpad5)
+            if (settingsOpen)
+                return;
+            switch (e.action)
             {
-                btPause_Click(null, null);
+                case HotkeyAction.Pause:
+                    btPause_Click(null, null);
+                    break;
+                case HotkeyAction.SoloSession:
+                    btSuspend_Click(null, null);
+                    break;
+                case HotkeyAction.ResupplyBunker:
+                    btResupplyBunker_Click(null, null);
+                    break;
+                case HotkeyAction.ResupplyCocaine:
+                    btResupplyCocaine_Click(null, null);
+                    break;
+                case HotkeyAction.ResupplyMeth:
+                    btResupplyMeth_Click(null, null);
+                    break;
+                case HotkeyAction.ResupplyCounterfeit:
+                    btResupplyCounterfeit_Click(null, null);
+                    break;
+                case HotkeyAction.SellBunker:
+                    btSellBunker_Click(null, null);
+                    break;
+                case HotkeyAction.SellCocaine:
+                    btSellCocaine_Click(null, null);
+                    break;
+                case HotkeyAction.SellMeth:
+                    btSellMeth_Click(null, null);
+                    break;
+                case HotkeyAction.SellCounterfeit:
+                    btSellCounterfeit_Click(null, null);
+                    break;
             }
         }
 
@@ -255,7 +291,7 @@ namespace GTAOBusinesses
 
             Control c = (Control)sender;
 
-            switch(c.Name)
+            switch (c.Name)
             {
                 case "pbSupBunker":
                     businesses[0].SetSupplyBars(val);
@@ -440,7 +476,7 @@ namespace GTAOBusinesses
                     System.Threading.Thread.Sleep(1000);
                 }
                 Dispatcher.Invoke(() =>
-                { 
+                {
                     btSuspend.Content = "Solo Session";
                     btSuspend.ClearValue(Control.BackgroundProperty);
                 });
@@ -455,8 +491,10 @@ namespace GTAOBusinesses
 
         private void btSettings_Click(object sender, RoutedEventArgs e)
         {
-            Settings window = new Settings();
+            settingsOpen = true;
+            Settings window = new Settings(hotkeyManager);
             window.ShowDialog();
+            settingsOpen = false;
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)

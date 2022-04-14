@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GTAOBusinesses"
         mc:Ignorable="d"
-        Title="Settings" Height="300" Width="600" ResizeMode="NoResize">
+        Title="Settings" Height="300" Width="720" ResizeMode="NoResize" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -13,19 +13,41 @@
         </Grid.RowDefinitions>
         <TabControl>
             <TabItem Header="Keymap">
-                <Grid>
+                <Grid x:Name="grKeymap">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="180"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="10*"/>
+                        <ColumnDefinition Width="18*"/>
+                        <ColumnDefinition Width="10*"/>
+                        <ColumnDefinition Width="18*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
                     <Label Content="Pause" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0"/>
-                    <Button x:Name="btShortcutPause" Width="180" Content="CTRL+ALT+NUM5" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="0"/>
+                    <Label Content="SoloSession" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="1"/>
+                    <Label Content="Resupply Bunker" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="2"/>
+                    <Label Content="Resupply Cocaine" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="3"/>
+                    <Label Content="Resupply Meth" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="4"/>
+                    <Label Content="Resupply Counterfeit" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="5"/>
+                    <Label Content="Sell Bunker" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="0"/>
+                    <Label Content="Sell Cocaine" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="1"/>
+                    <Label Content="Sell Meth" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="2"/>
+                    <Label Content="Sell Counterfeit" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="3"/>
+                    <Button x:Name="btShortcutPause" Margin="0,5,10,5" Grid.Column="1" Grid.Row="0" Click="btShortcut_Click"/>
+                    <Button x:Name="btShortcutSoloSession" Margin="0,5,10,5" Grid.Column="1" Grid.Row="1" Click="btShortcut_Click"/>
+                    <Button x:Name="btShortcutResupplyBunker" Margin="0,5,10,5" Grid.Column="1" Grid.Row="2" Click="btShortcut_Click"/>
+                    <Button x:Name="btShortcutResupplyCocaine" Margin="0,5,10,5" Grid.Column="1" Grid.Row="3" Click="btShortcut_Click"/>
+                    <Button x:Name="btShortcutResupplyMeth" Margin="0,5,10,5" Grid.Column="1" Grid.Row="4" Click="btShortcut_Click"/>
+                    <Button x:Name="btShortcutResupplyCounterfeit" Margin="0,5,10,5" Grid.Column="1" Grid.Row="5" Click="btShortcut_Click"/>
+                    <Button x:Name="btShortcutSellBunker" Margin="0,5,10,5" Grid.Column="3" Grid.Row="0" Click="btShortcut_Click"/>
+                    <Button x:Name="btShortcutSellCocaine" Margin="0,5,10,5" Grid.Column="3" Grid.Row="1" Click="btShortcut_Click"/>
+                    <Button x:Name="btShortcutSellMeth" Margin="0,5,10,5" Grid.Column="3" Grid.Row="2" Click="btShortcut_Click"/>
+                    <Button x:Name="btShortcutSellCounterfeit" Margin="0,5,10,5" Grid.Column="3" Grid.Row="3" Click="btShortcut_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>
@@ -35,7 +57,7 @@
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="btCancel" Content="Cancel" Margin="10,10,10,10" Grid.Column="0" Click="btCancel_Click"/>
-            <Button x:Name="btOK" Content="OK" Margin="10,10,10,10" Grid.Column="1"/>
+            <Button x:Name="btOK" Content="OK" Margin="10,10,10,10" Grid.Column="1" Click="btOK_Click"/>
         </Grid>
     </Grid>
 </Window>
