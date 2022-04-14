@@ -25,7 +25,7 @@
                         <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
                     <Label Content="Pause" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0"/>
-                    <Button x:Name="btShortcutPause" Width="180" Content="Ctrl+Shift+NUM5" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="0"/>
+                    <Button x:Name="btShortcutPause" Width="180" Content="CTRL+ALT+NUM5" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="0"/>
                 </Grid>
             </TabItem>
         </TabControl>

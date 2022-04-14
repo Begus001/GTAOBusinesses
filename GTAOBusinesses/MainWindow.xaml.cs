@@ -43,10 +43,10 @@ namespace GTAOBusinesses
         private static extern uint SuspendThread(IntPtr hThread);
         [DllImport("kernel32.dll")]
         private static extern int ResumeThread(IntPtr hThread);
-        [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("kernel32.dll")]
         private static extern bool CloseHandle(IntPtr handle);
 
-        private readonly Version version = new Version("1.3.1");
+        private readonly Version version = new Version("1.4");
 
         private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
         private const string stateFilename = "state.txt";
@@ -101,6 +101,19 @@ namespace GTAOBusinesses
             settings = new SettingsManager(settingsPath);
             settings.RestoreWindowDimensions(this);
             settings.RestoreWindowLocation(this);
+
+            HotkeyManager h = new HotkeyManager(this);
+            h.Add(Modifier.CTRL | Modifier.ALT, VirtualKey.Numpad5);
+
+            h.HotkeyPressed += globalKeyHandler;
+        }
+
+        private void globalKeyHandler(HotkeyEventArgs e)
+        {
+            if ((VirtualKey)e.key == VirtualKey.Numpad5)
+            {
+                btPause_Click(null, null);
+            }
         }
 
         private void load()
