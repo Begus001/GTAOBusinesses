@@ -16,14 +16,15 @@
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="40"/>
                 <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="80"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="btPause" Content="Pause" Margin="10,10,10,10" Click="btPause_Click" Grid.Column="0" BorderThickness="0.5"/>
             <Button x:Name="btSuspend" Content="Solo Session" Margin="10,10,10,10" Click="btSuspend_Click" Grid.Column="2"/>
+            <Button x:Name="btKillProcess" Content="Kill GTA" Margin="10,10,10,10" Click="btKillProcess_Click" Grid.Column="3"/>
             <Button x:Name="btSettings" Content="Settings" Margin="10,10,10,10" Click="btSettings_Click" Grid.Column="5"/>
             <Button x:Name="btUpdate" Content="Update" Margin="10,10,10,10" Click="btUpdate_Click" Grid.Column="6"/>
             <Button x:Name="btAbout" Content="About" Margin="10,10,10,10" Click="btAbout_Click" Grid.Column="7"/>

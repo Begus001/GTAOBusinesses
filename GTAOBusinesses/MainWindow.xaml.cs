@@ -46,7 +46,7 @@ namespace GTAOBusinesses
         [DllImport("kernel32.dll")]
         private static extern bool CloseHandle(IntPtr handle);
 
-        private readonly Version version = new Version("1.5");
+        private readonly Version version = new Version("1.5.1");
 
         private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
         private const string stateFilename = "state.txt";
@@ -149,6 +149,9 @@ namespace GTAOBusinesses
                     break;
                 case HotkeyAction.SellCounterfeit:
                     btSellCounterfeit_Click(null, null);
+                    break;
+                case HotkeyAction.KillProcess:
+                    btKillProcess_Click(null, null);
                     break;
             }
         }
@@ -383,20 +386,15 @@ namespace GTAOBusinesses
 
         private static bool SuspendProcess()
         {
-            Process process = null;
-            foreach (Process item in Process.GetProcesses())
-            {
-                if (item.ProcessName == "GTA5")
-                {
-                    process = item;
-                }
-            }
+            Process[] procs = Process.GetProcessesByName("GTA5");
 
-            if (process == null)
+            if (procs.Length < 1)
             {
                 MessageBox.Show("Process GTA5.exe not found!", "Could not suspend", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
+
+            Process process = procs[0];
 
             foreach (ProcessThread pT in process.Threads)
             {
@@ -416,20 +414,15 @@ namespace GTAOBusinesses
 
         public static bool ResumeProcess()
         {
-            Process process = null;
-            foreach (Process item in Process.GetProcesses())
-            {
-                if (item.ProcessName == "GTA5")
-                {
-                    process = item;
-                }
-            }
+            Process[] procs = Process.GetProcessesByName("GTA5");
 
-            if (process == null)
+            if (procs.Length < 1)
             {
                 MessageBox.Show("Process GTA5.exe not found!", "Could not resume", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
+
+            Process process = procs[0];
 
             foreach (ProcessThread pT in process.Threads)
             {
@@ -510,6 +503,17 @@ namespace GTAOBusinesses
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             settings.Save();
+        }
+
+        private void btKillProcess_Click(object sender, RoutedEventArgs e)
+        {
+            Process[] procs = Process.GetProcessesByName("gta5");
+            if (procs.Length < 1)
+            {
+                MessageBox.Show("Process GTA5.exe not found!", "Could not kill", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            procs[0].Kill();
         }
     }
 }

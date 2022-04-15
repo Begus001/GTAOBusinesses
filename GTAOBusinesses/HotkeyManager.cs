@@ -195,6 +195,7 @@ namespace GTAOBusinesses
         SellCocaine,
         SellMeth,
         SellCounterfeit,
+        KillProcess,
     }
 
     public enum ModifierKey : uint

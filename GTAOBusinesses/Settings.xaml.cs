@@ -65,6 +65,10 @@ namespace GTAOBusinesses
                     hotkeyButtons[i].Content = HotkeyManager.ModToString(bindings[i].Item1);
                     hotkeyButtons[i].Content += bindings[i].Item2.ToString();
                 }
+                else
+                {
+                    hotkeyButtons[i].Content = "";
+                }
             }
 
             foreach (Button btn in hotkeyButtons)
