@@ -43,6 +43,8 @@ namespace GTAOBusinesses
                 }
             }
 
+            hotkeyManager.UnregisterAll();
+
             assignHotkeyManagerBindings();
             updateUI();
         }
@@ -87,6 +89,7 @@ namespace GTAOBusinesses
 
         private void btCancel_Click(object sender, RoutedEventArgs e)
         {
+            hotkeyManager.ReregisterAll();
             Close();
         }
 
@@ -103,6 +106,13 @@ namespace GTAOBusinesses
         {
             if (beingEdited == null)
                 return;
+
+            if ((Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt)
+            {
+                mod |= 1;
+                updateUI();
+                return;
+            }
 
             switch (e.Key)
             {
@@ -138,7 +148,9 @@ namespace GTAOBusinesses
                 {
                     VirtualKey key;
                     Enum.TryParse(e.Key.ToString(), out key);
-                    bindings[i] = Tuple.Create((ModifierKey)mod, key);
+                    Tuple<ModifierKey, VirtualKey> t = Tuple.Create((ModifierKey)mod, key);
+                    if (!bindings.Contains(t))
+                        bindings[i] = t;
                 }
             }
 
@@ -196,6 +208,7 @@ namespace GTAOBusinesses
                 }
             }
             hotkeyManager.Save();
+            hotkeyManager.ReregisterAll();
             Close();
         }
     }

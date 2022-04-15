@@ -74,6 +74,22 @@ namespace GTAOBusinesses
             UnregisterHotKey(hwnd, (int)action);
         }
 
+        public void UnregisterAll()
+        {
+            for (int i = 0; i < NumActions; i++)
+                UnregisterHotKey(hwnd, (int)i);
+        }
+
+        public void ReregisterAll()
+        {
+            for (int i = 0; i < NumActions; i++)
+            {
+                if (Bindings[i] == null)
+                    continue;
+                RegisterHotKey(hwnd, (int)i, (uint)Bindings[i].Item1, (uint)Bindings[i].Item2);
+            }
+        }
+
         public void Save()
         {
             StreamWriter w = new StreamWriter(SaveLocation, false);
