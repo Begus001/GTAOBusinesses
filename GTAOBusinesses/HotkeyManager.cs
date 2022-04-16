@@ -24,7 +24,8 @@ namespace GTAOBusinesses
 
         public readonly int NumActions;
 
-        public Tuple<ModifierKey, VirtualKey>[] Bindings { get; set; }
+        public Tuple<ModifierKey, VirtualKey>[] Bindings { get; }
+        private readonly Tuple<ModifierKey, VirtualKey>[] defaults;
 
         public delegate void HotkeyPressedEventHandler(HotkeyEventArgs e);
         public event HotkeyPressedEventHandler HotkeyPressed;
@@ -40,6 +41,18 @@ namespace GTAOBusinesses
             NumActions = Enum.GetNames(typeof(HotkeyAction)).Length;
 
             Bindings = new Tuple<ModifierKey, VirtualKey>[NumActions];
+            defaults = new Tuple<ModifierKey, VirtualKey>[NumActions];
+
+            defaults[(int)HotkeyAction.Pause] = Tuple.Create(ModifierKey.CTRL, VirtualKey.NumPad0);
+            defaults[(int)HotkeyAction.SoloSession] = Tuple.Create(ModifierKey.CTRL, VirtualKey.Add);
+            defaults[(int)HotkeyAction.ResupplyBunker] = Tuple.Create(ModifierKey.CTRL, VirtualKey.NumPad1);
+            defaults[(int)HotkeyAction.ResupplyCocaine] = Tuple.Create(ModifierKey.CTRL, VirtualKey.NumPad2);
+            defaults[(int)HotkeyAction.ResupplyMeth] = Tuple.Create(ModifierKey.CTRL, VirtualKey.NumPad3);
+            defaults[(int)HotkeyAction.ResupplyCounterfeit] = Tuple.Create(ModifierKey.CTRL, VirtualKey.NumPad4);
+            defaults[(int)HotkeyAction.SellBunker] = Tuple.Create(ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad1);
+            defaults[(int)HotkeyAction.SellCocaine] = Tuple.Create(ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad2);
+            defaults[(int)HotkeyAction.SellMeth] = Tuple.Create(ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad3);
+            defaults[(int)HotkeyAction.SellCounterfeit] = Tuple.Create(ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad4);
 
             SaveLocation = saveLocation;
 
@@ -93,7 +106,7 @@ namespace GTAOBusinesses
         public void Save()
         {
             StreamWriter w = new StreamWriter(SaveLocation, false);
-            for(int i = 0; i < NumActions; i++)
+            for (int i = 0; i < NumActions; i++)
             {
                 if (Bindings[i] == null)
                 {
@@ -101,7 +114,7 @@ namespace GTAOBusinesses
                 }
                 else
                 {
-                    w.WriteLine(((uint)Bindings[i].Item1).ToString());
+                    w.Write(((uint)Bindings[i].Item1).ToString() + ' ');
                     w.WriteLine(((uint)Bindings[i].Item2).ToString());
                 }
             }
@@ -112,48 +125,59 @@ namespace GTAOBusinesses
         public void Load()
         {
             StreamReader r = new StreamReader(File.Open(SaveLocation, FileMode.Open));
+            bool error = false;
+            ModifierKey mod;
+            VirtualKey key;
 
-            try
+            for (uint i = 0; i < NumActions; i++)
             {
-                for (uint i = 0; i < NumActions; i++)
+                try
                 {
-                    string modStr = r.ReadLine();
-                    if (modStr == "")
+                    string str = r.ReadLine();
+                    if (str == "")
                         continue;
 
-                    ModifierKey mod = (ModifierKey)Convert.ToUInt32(modStr);
-                    VirtualKey key = (VirtualKey)Convert.ToUInt32(r.ReadLine());
-
-                    Set((HotkeyAction)i, mod, key);
+                    mod = (ModifierKey)Convert.ToUInt32(str.Split(' ')[0]);
+                    key = (VirtualKey)Convert.ToUInt32(str.Split(' ')[1]);
                 }
-            }
-            catch
-            {
-                r.Close();
-                if (File.Exists(SaveLocation + ".bak"))
-                    File.Delete(SaveLocation + ".bak");
-                File.Move(SaveLocation, SaveLocation + ".bak");
-                SetDefault();
-                Save();
-                MessageBox.Show("The keymap file (" + SaveLocation + ") could not be read, a clean one has been created and the old one renamed.", "Keymap file corrupted", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                catch
+                {
+                    error = true;
+                    if (defaults[i] != null)
+                    {
+                        mod = defaults[i].Item1;
+                        key = defaults[i].Item2;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
+                Set((HotkeyAction)i, mod, key);
             }
 
             r.Close();
+
+            if (error)
+            {
+                if (File.Exists(SaveLocation + ".bak"))
+                    File.Delete(SaveLocation + ".bak");
+                File.Move(SaveLocation, SaveLocation + ".bak");
+                Save();
+                MessageBox.Show(string.Format("Some hotkeys ({0}) could not be loaded and have been reset to their default setting! A backup has been created.", SaveLocation), "Keymap corrupted", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         public void SetDefault()
         {
-            Set(HotkeyAction.Pause, ModifierKey.CTRL, VirtualKey.NumPad0);
-            Set(HotkeyAction.SoloSession, ModifierKey.CTRL, VirtualKey.Add);
-            Set(HotkeyAction.ResupplyBunker, ModifierKey.CTRL, VirtualKey.NumPad1);
-            Set(HotkeyAction.ResupplyCocaine, ModifierKey.CTRL, VirtualKey.NumPad2);
-            Set(HotkeyAction.ResupplyMeth, ModifierKey.CTRL, VirtualKey.NumPad3);
-            Set(HotkeyAction.ResupplyCounterfeit, ModifierKey.CTRL, VirtualKey.NumPad4);
-            Set(HotkeyAction.SellBunker, ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad1);
-            Set(HotkeyAction.SellCocaine, ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad2);
-            Set(HotkeyAction.SellMeth, ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad3);
-            Set(HotkeyAction.SellCounterfeit, ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad4);
+            for (int i = 0; i < NumActions; i++)
+            {
+                if (Bindings[i] != null)
+                    Unset((HotkeyAction)i);
+                if (defaults[i] != null)
+                    Set((HotkeyAction)i, defaults[i].Item1, defaults[i].Item2);
+            }
         }
 
         private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -196,7 +220,7 @@ namespace GTAOBusinesses
     {
         public VirtualKey key;
         public ModifierKey mod;
-        public HotkeyAction action; 
+        public HotkeyAction action;
     }
 
     public enum HotkeyAction : uint

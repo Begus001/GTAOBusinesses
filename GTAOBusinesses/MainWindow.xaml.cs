@@ -46,7 +46,7 @@ namespace GTAOBusinesses
         [DllImport("kernel32.dll")]
         private static extern bool CloseHandle(IntPtr handle);
 
-        private readonly Version version = new Version("1.5.2");
+        private readonly Version version = new Version("1.6");
 
         private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
         private const string stateFilename = "state.txt";
@@ -81,6 +81,8 @@ namespace GTAOBusinesses
         System.Threading.Thread suspendThread;
 
         public static double val = -1.0d;
+
+        private bool isGTAOpen = false;
 
         public MainWindow()
         {
@@ -207,8 +209,31 @@ namespace GTAOBusinesses
             file.Close();
         }
 
+        private bool checkProcessOpen()
+        {
+            Process[] procs = Process.GetProcessesByName("GTA5");
+            if (procs.Length > 0)
+            {
+                return true;
+            }
+            else
+            { 
+                return false;
+            }
+        }
+
         private void tick(object source, ElapsedEventArgs e)
         {
+            if (checkProcessOpen() && !isGTAOpen)
+            {
+                isGTAOpen = true;
+            }
+            else if (!checkProcessOpen() && isGTAOpen && settings.PauseOnClose)
+            {
+                settings.Paused = true;
+                isGTAOpen = false;
+            }
+
             for (int i = 0; i < 4; i++)
             {
                 if (settings.Paused)
@@ -485,8 +510,9 @@ namespace GTAOBusinesses
         private void btSettings_Click(object sender, RoutedEventArgs e)
         {
             settingsOpen = true;
-            Settings window = new Settings(hotkeyManager);
+            Settings window = new Settings(hotkeyManager, settings);
             window.ShowDialog();
+            isGTAOpen = false;
             settingsOpen = false;
         }
 
@@ -507,7 +533,7 @@ namespace GTAOBusinesses
 
         private void btKillProcess_Click(object sender, RoutedEventArgs e)
         {
-            Process[] procs = Process.GetProcessesByName("gta5");
+            Process[] procs = Process.GetProcessesByName("GTA5");
             if (procs.Length < 1)
             {
                 MessageBox.Show("Process GTA5.exe not found!", "Could not kill", MessageBoxButton.OK, MessageBoxImage.Error);

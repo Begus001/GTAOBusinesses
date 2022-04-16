@@ -12,6 +12,23 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <TabControl>
+            <TabItem Header="General">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <CheckBox x:Name="cbPauseOnGameClose" Margin="10,0,0,0" Content="Pause when GTA is closed" VerticalAlignment="Center" IsChecked="True" Checked="cbPauseOnGameClose_Checked" Unchecked="cbPauseOnGameClose_Unchecked"/>
+                </Grid>
+            </TabItem>
             <TabItem Header="Keymap">
                 <Grid x:Name="grKeymap">
                     <Grid.ColumnDefinitions>

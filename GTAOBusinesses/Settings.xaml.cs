@@ -18,20 +18,24 @@ namespace GTAOBusinesses
     public partial class Settings : Window
     {
         private HotkeyManager hotkeyManager;
+        private SettingsManager settingsManager;
         private readonly List<Button> hotkeyButtons;
         private readonly Tuple<ModifierKey, VirtualKey>[] bindings;
+
+        private bool settingPauseOnClose;
 
         private Button beingEdited;
 
         private uint mod = 0;
 
-        public Settings(HotkeyManager hotkeyManager)
+        public Settings(HotkeyManager hotkeyManager, SettingsManager settingsManager)
         {
             InitializeComponent();
 
             this.hotkeyManager = hotkeyManager;
-            hotkeyButtons = new List<Button>();
+            this.settingsManager = settingsManager;
 
+            hotkeyButtons = new List<Button>();
             bindings = new Tuple<ModifierKey, VirtualKey>[hotkeyManager.NumActions];
 
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(grKeymap); i++)
@@ -42,6 +46,8 @@ namespace GTAOBusinesses
                     hotkeyButtons.Add((Button)ctrl);
                 }
             }
+
+            settingPauseOnClose = settingsManager.PauseOnClose;
 
             hotkeyManager.UnregisterAll();
 
@@ -85,6 +91,8 @@ namespace GTAOBusinesses
                     btn.ClearValue(Control.BackgroundProperty);
                 }
             }
+
+            cbPauseOnGameClose.IsChecked = settingPauseOnClose;
         }
 
         private void btCancel_Click(object sender, RoutedEventArgs e)
@@ -209,7 +217,19 @@ namespace GTAOBusinesses
             }
             hotkeyManager.Save();
             hotkeyManager.ReregisterAll();
+            settingsManager.PauseOnClose = settingPauseOnClose;
+            settingsManager.Save();
             Close();
+        }
+
+        private void cbPauseOnGameClose_Checked(object sender, RoutedEventArgs e)
+        {
+            settingPauseOnClose = true;
+        }
+
+        private void cbPauseOnGameClose_Unchecked(object sender, RoutedEventArgs e)
+        {
+            settingPauseOnClose = false;
         }
     }
 }
