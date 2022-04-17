@@ -53,6 +53,7 @@ namespace GTAOBusinesses
             defaults[(int)HotkeyAction.SellCocaine] = Tuple.Create(ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad2);
             defaults[(int)HotkeyAction.SellMeth] = Tuple.Create(ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad3);
             defaults[(int)HotkeyAction.SellCounterfeit] = Tuple.Create(ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad4);
+            defaults[(int)HotkeyAction.AFK] = Tuple.Create(ModifierKey.SHIFT, VirtualKey.Add);
 
             SaveLocation = saveLocation;
 
@@ -236,6 +237,7 @@ namespace GTAOBusinesses
         SellMeth,
         SellCounterfeit,
         KillProcess,
+        AFK,
     }
 
     public enum ModifierKey : uint

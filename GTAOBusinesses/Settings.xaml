@@ -11,8 +11,8 @@
             <RowDefinition/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <TabControl>
-            <TabItem Header="General">
+        <TabControl x:Name="tcTab">
+            <TabItem Header="General" TabIndex="0">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -29,7 +29,7 @@
                     <CheckBox x:Name="cbPauseOnGameClose" Margin="10,0,0,0" Content="Pause when GTA is closed" VerticalAlignment="Center" IsChecked="True" Checked="cbPauseOnGameClose_Checked" Unchecked="cbPauseOnGameClose_Unchecked"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Keymap">
+            <TabItem x:Name="tiKeymap" Header="Keymap">
                 <Grid x:Name="grKeymap">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10*"/>
@@ -56,6 +56,7 @@
                     <Label Content="Sell Meth" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="2"/>
                     <Label Content="Sell Counterfeit" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="3"/>
                     <Label Content="Kill GTA" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="4"/>
+                    <Label Content="AFK Anti-Kick" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="5"/>
                     <Button x:Name="btShortcutPause" Margin="0,5,10,5" Grid.Column="1" Grid.Row="0" Click="btShortcut_Click"/>
                     <Button x:Name="btShortcutSoloSession" Margin="0,5,10,5" Grid.Column="1" Grid.Row="1" Click="btShortcut_Click"/>
                     <Button x:Name="btShortcutResupplyBunker" Margin="0,5,10,5" Grid.Column="1" Grid.Row="2" Click="btShortcut_Click"/>
@@ -67,6 +68,7 @@
                     <Button x:Name="btShortcutSellMeth" Margin="0,5,10,5" Grid.Column="3" Grid.Row="2" Click="btShortcut_Click"/>
                     <Button x:Name="btShortcutSellCounterfeit" Margin="0,5,10,5" Grid.Column="3" Grid.Row="3" Click="btShortcut_Click"/>
                     <Button x:Name="btShortcutKillGTA" Margin="0,5,10,5" Grid.Column="3" Grid.Row="4" Click="btShortcut_Click"/>
+                    <Button x:Name="btShortcutAFK" Margin="0,5,10,5" Grid.Column="3" Grid.Row="5" Click="btShortcut_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>

@@ -46,7 +46,7 @@ namespace GTAOBusinesses
         [DllImport("kernel32.dll")]
         private static extern bool CloseHandle(IntPtr handle);
 
-        private readonly Version version = new Version("1.6.1");
+        private readonly Version version = new Version("1.6.2");
 
         private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
         private const string stateFilename = "state.txt";
@@ -75,14 +75,19 @@ namespace GTAOBusinesses
 
         private readonly Timer saveTimer = new Timer(1000);
 
+        private readonly Timer afkTimer = new Timer(1000);
+
         private readonly HotkeyManager hotkeyManager;
 
-        bool suspended = false;
-        System.Threading.Thread suspendThread;
+        private bool suspended = false;
+        private System.Threading.Thread suspendThread;
+
+        private const int killRetryCount = 5000;
 
         public static double val = -1.0d;
 
         private bool isGTAOpen = false;
+        private bool afkEnabled = false;
 
         public MainWindow()
         {
@@ -102,6 +107,9 @@ namespace GTAOBusinesses
             saveTimer.Elapsed += tick;
             saveTimer.AutoReset = true;
             saveTimer.Start();
+
+            afkTimer.Elapsed += pressArrowDown;
+            afkTimer.AutoReset = true;
 
             load();
 
@@ -125,37 +133,40 @@ namespace GTAOBusinesses
             switch (e.action)
             {
                 case HotkeyAction.Pause:
-                    btPause_Click(null, null);
+                    btPause_Click(btPause, null);
                     break;
                 case HotkeyAction.SoloSession:
-                    btSuspend_Click(null, null);
+                    btSuspend_Click(btSuspend, null);
                     break;
                 case HotkeyAction.ResupplyBunker:
-                    btResupplyBunker_Click(null, null);
+                    btResupplyBunker_Click(btResupplyBunker, null);
                     break;
                 case HotkeyAction.ResupplyCocaine:
-                    btResupplyCocaine_Click(null, null);
+                    btResupplyCocaine_Click(btResupplyCocaine, null);
                     break;
                 case HotkeyAction.ResupplyMeth:
-                    btResupplyMeth_Click(null, null);
+                    btResupplyMeth_Click(btResupplyMeth, null);
                     break;
                 case HotkeyAction.ResupplyCounterfeit:
-                    btResupplyCounterfeit_Click(null, null);
+                    btResupplyCounterfeit_Click(btResupplyCounterfeit, null);
                     break;
                 case HotkeyAction.SellBunker:
-                    btSellBunker_Click(null, null);
+                    btSellBunker_Click(btSellBunker, null);
                     break;
                 case HotkeyAction.SellCocaine:
-                    btSellCocaine_Click(null, null);
+                    btSellCocaine_Click(btSellCocaine, null);
                     break;
                 case HotkeyAction.SellMeth:
-                    btSellMeth_Click(null, null);
+                    btSellMeth_Click(btSellMeth, null);
                     break;
                 case HotkeyAction.SellCounterfeit:
-                    btSellCounterfeit_Click(null, null);
+                    btSellCounterfeit_Click(btSellCounterfeit, null);
                     break;
                 case HotkeyAction.KillProcess:
-                    btKillProcess_Click(null, null);
+                    btKillProcess_Click(btKillProcess, null);
+                    break;
+                case HotkeyAction.AFK:
+                    btAFK_Click(btAFK, null);
                     break;
             }
         }
@@ -219,7 +230,7 @@ namespace GTAOBusinesses
                 return true;
             }
             else
-            { 
+            {
                 return false;
             }
         }
@@ -253,6 +264,11 @@ namespace GTAOBusinesses
                 {
                     btPause.Background = Brushes.MediumSeaGreen;
                 }
+
+                if (afkEnabled)
+                    btAFK.Background = Brushes.MediumSeaGreen;
+                else
+                    btAFK.ClearValue(Control.BackgroundProperty);
             });
             save();
         }
@@ -513,7 +529,7 @@ namespace GTAOBusinesses
         private void btSettings_Click(object sender, RoutedEventArgs e)
         {
             settingsOpen = true;
-            Settings window = new Settings(hotkeyManager, settings);
+            Settings window = new Settings(hotkeyManager, settings, false);
             window.ShowDialog();
             isGTAOpen = false;
             settingsOpen = false;
@@ -542,7 +558,57 @@ namespace GTAOBusinesses
                 MessageBox.Show("Process GTA5.exe not found!", "Could not kill", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            procs[0].Kill();
+
+            if (sender.GetType() == typeof(MenuItem))
+                if (MessageBox.Show("Do you really want to kill GTA?", "U sure?", MessageBoxButton.YesNo, MessageBoxImage.Information) != MessageBoxResult.Yes)
+                    return;
+
+            int i = 0;
+            try
+            {
+                do
+                {
+                    procs[0].Kill();
+                } while ((procs = Process.GetProcessesByName("GTA5")).Length > 0 && i++ < killRetryCount);
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void btKeymap_Click(object sender, RoutedEventArgs e)
+        {
+            settingsOpen = true;
+            Settings window = new Settings(hotkeyManager, settings, true);
+            window.ShowDialog();
+            isGTAOpen = false;
+            settingsOpen = false;
+        }
+
+        [DllImport("user32.dll")]
+        private static extern uint keybd_event(byte bVK, byte bScan, int dwFlags, UIntPtr dwExtraInfo);
+
+        private void pressArrowDown(object sender, ElapsedEventArgs e)
+        {
+            keybd_event((byte)VirtualKey.Noname, 0x48, 0, UIntPtr.Zero);
+            System.Threading.Thread.Sleep(5);
+            keybd_event((byte)VirtualKey.Noname, 0x48, 2, UIntPtr.Zero);
+        }
+
+        private unsafe void btAFK_Click(object sender, RoutedEventArgs e)
+        {
+            afkEnabled = !afkEnabled;
+            if (afkEnabled)
+                afkTimer.Start();
+            else
+                afkTimer.Stop();
+            tick(null, null);
+        }
+
+        private void btExitMenu_Click(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }

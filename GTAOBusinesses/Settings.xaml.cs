@@ -28,7 +28,7 @@ namespace GTAOBusinesses
 
         private uint mod = 0;
 
-        public Settings(HotkeyManager hotkeyManager, SettingsManager settingsManager)
+        public Settings(HotkeyManager hotkeyManager, SettingsManager settingsManager, bool keymapPage)
         {
             InitializeComponent();
 
@@ -50,6 +50,9 @@ namespace GTAOBusinesses
             settingPauseOnClose = settingsManager.PauseOnClose;
 
             hotkeyManager.UnregisterAll();
+
+            if (keymapPage)
+                tcTab.SelectedItem = tiKeymap;
 
             assignHotkeyManagerBindings();
             updateUI();
