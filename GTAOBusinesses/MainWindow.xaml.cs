@@ -46,7 +46,7 @@ namespace GTAOBusinesses
         [DllImport("kernel32.dll")]
         private static extern bool CloseHandle(IntPtr handle);
 
-        private readonly Version version = new Version("1.6");
+        private readonly Version version = new Version("1.6.1");
 
         private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
         private const string stateFilename = "state.txt";
@@ -114,6 +114,8 @@ namespace GTAOBusinesses
             hotkeyManager.HotkeyPressed += globalKeyHandler;
 
             tick(null, null);
+
+            checkUpdate(true);
         }
 
         private void globalKeyHandler(HotkeyEventArgs e)
@@ -373,7 +375,7 @@ namespace GTAOBusinesses
             Environment.Exit(0);
         }
 
-        private void checkUpdate()
+        private void checkUpdate(bool onStartup)
         {
             WebRequest req = WebRequest.CreateHttp("http://begus.ddns.net/gtaoupdate/version.txt");
             WebResponse resp = req.GetResponse();
@@ -397,7 +399,8 @@ namespace GTAOBusinesses
             }
             else
             {
-                MessageBox.Show("Already up to date!", "No update", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (!onStartup)
+                    MessageBox.Show("Already up to date!", "No update", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
             s.Close();
@@ -406,7 +409,7 @@ namespace GTAOBusinesses
 
         private void btUpdate_Click(object sender, RoutedEventArgs e)
         {
-            checkUpdate();
+            checkUpdate(false);
         }
 
         private static bool SuspendProcess()
