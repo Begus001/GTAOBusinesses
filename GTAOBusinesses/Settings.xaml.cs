@@ -234,5 +234,10 @@ namespace GTAOBusinesses
         {
             settingPauseOnClose = false;
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            hotkeyManager.ReregisterAll();
+        }
     }
 }
