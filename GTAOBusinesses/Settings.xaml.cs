@@ -24,6 +24,7 @@ namespace GTAOBusinesses
 
         private bool settingPauseOnClose;
         private int settingAFKKey;
+        private int settingAFKKeyInterval;
 
         private Button beingEdited;
 
@@ -50,6 +51,7 @@ namespace GTAOBusinesses
 
             settingPauseOnClose = settingsManager.PauseOnClose;
             settingAFKKey = settingsManager.AFKKey;
+            settingAFKKeyInterval = settingsManager.AFKKeyInterval;
 
             hotkeyManager.UnregisterAll();
 
@@ -99,6 +101,7 @@ namespace GTAOBusinesses
 
             cbPauseOnGameClose.IsChecked = settingPauseOnClose;
             tbAFKKey.Text = settingAFKKey.ToString("X");
+            tbAFKKeyInterval.Text = settingAFKKeyInterval.ToString();
         }
 
         private void btCancel_Click(object sender, RoutedEventArgs e)
@@ -224,12 +227,21 @@ namespace GTAOBusinesses
             hotkeyManager.Save();
             hotkeyManager.ReregisterAll();
             settingsManager.PauseOnClose = settingPauseOnClose;
+
             try 
             { 
                 settingAFKKey = Convert.ToInt32(tbAFKKey.Text, 16);
                 settingsManager.AFKKey = settingAFKKey;
             }
             catch { MessageBox.Show("AFK key value invalid, value was not saved!", "Invalid AFK Key", MessageBoxButton.OK, MessageBoxImage.Error); }
+
+            try
+            {
+                settingAFKKeyInterval = Convert.ToInt32(tbAFKKeyInterval.Text);
+                settingsManager.AFKKeyInterval = settingAFKKeyInterval;
+            }
+            catch { MessageBox.Show("AFK key interval value invalid, value was not saved!", "Invalid AFK Key Interval", MessageBoxButton.OK, MessageBoxImage.Error); }
+
             settingsManager.Save();
             Close();
         }

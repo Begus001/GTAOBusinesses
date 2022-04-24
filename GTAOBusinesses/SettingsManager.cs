@@ -19,7 +19,8 @@ namespace GTAOBusinesses
             Y,
             Paused,
             PauseOnClose,
-            AFKKey
+            AFKKey,
+            AFKKeyInterval
         }
         public double WindowWidth
         {
@@ -98,6 +99,17 @@ namespace GTAOBusinesses
                 settings[(int)Settings.AFKKey] = value;
             }
         }
+        public int AFKKeyInterval
+        {
+            get
+            {
+                return (int)settings[(int)Settings.AFKKeyInterval];
+            }
+            set
+            {
+                settings[(int)Settings.AFKKeyInterval] = value;
+            }
+        }
 
         public string SaveLocation { get; set; }
 
@@ -115,6 +127,7 @@ namespace GTAOBusinesses
             types.Add(typeof(bool));
             types.Add(typeof(bool));
             types.Add(typeof(int));
+            types.Add(typeof(int));
 
             defaults.Add(0.0d);
             defaults.Add(0.0d);
@@ -123,6 +136,7 @@ namespace GTAOBusinesses
             defaults.Add(false);
             defaults.Add(true);
             defaults.Add(0x4e);  // NumPad+ (Add)
+            defaults.Add(5000);
 
             Reset();
 

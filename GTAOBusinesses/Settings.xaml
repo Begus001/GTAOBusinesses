@@ -29,6 +29,8 @@
                     <CheckBox x:Name="cbPauseOnGameClose" Margin="10,0,0,0" Content="Pause when GTA is closed" VerticalAlignment="Center" IsChecked="True" Checked="cbPauseOnGameClose_Checked" Unchecked="cbPauseOnGameClose_Unchecked"/>
                     <Label Content="AFK Key (Hex Hardware Scancode):" Grid.Row="1" VerticalAlignment="Center"/>
                     <TextBox x:Name="tbAFKKey" Grid.Row="1" Margin="200,5,10,5" KeyDown="tbAFKKey_KeyDown"/>
+                    <Label Content="AFK Key Interval (ms):" Grid.Row="2" VerticalAlignment="Center"/>
+                    <TextBox x:Name="tbAFKKeyInterval" Grid.Row="2" Margin="200,5,10,5" KeyDown="tbAFKKey_KeyDown"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tiKeymap" Header="Keymap">

@@ -46,7 +46,7 @@ namespace GTAOBusinesses
         [DllImport("kernel32.dll")]
         private static extern bool CloseHandle(IntPtr handle);
 
-        private readonly Version version = new Version("1.6.4");
+        private readonly Version version = new Version("1.6.5");
 
         private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
         private const string stateFilename = "state.txt";
@@ -75,7 +75,7 @@ namespace GTAOBusinesses
 
         private readonly Timer saveTimer = new Timer(1000);
 
-        private readonly Timer afkTimer = new Timer(1000);
+        private readonly Timer afkTimer = new Timer();
 
         private readonly HotkeyManager hotkeyManager;
 
@@ -108,14 +108,15 @@ namespace GTAOBusinesses
             saveTimer.AutoReset = true;
             saveTimer.Start();
 
-            afkTimer.Elapsed += antiAFKAction;
-            afkTimer.AutoReset = true;
-
             load();
 
             settings = new SettingsManager(settingsPath);
             settings.RestoreWindowDimensions(this);
             settings.RestoreWindowLocation(this);
+
+            afkTimer.Interval = settings.AFKKeyInterval;
+            afkTimer.Elapsed += antiAFKAction;
+            afkTimer.AutoReset = true;
 
             hotkeyManager = new HotkeyManager(this, keymapPath);
 
@@ -533,6 +534,7 @@ namespace GTAOBusinesses
             window.ShowDialog();
             isGTAOpen = false;
             settingsOpen = false;
+            afkTimer.Interval = settings.AFKKeyInterval;
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -593,7 +595,7 @@ namespace GTAOBusinesses
         private void antiAFKAction(object sender, ElapsedEventArgs e)
         {
             keybd_event((byte)VirtualKey.Noname, (byte)settings.AFKKey, 0, UIntPtr.Zero);
-            System.Threading.Thread.Sleep(50);
+            System.Threading.Thread.Sleep(5);
             keybd_event((byte)VirtualKey.Noname, (byte)settings.AFKKey, 2, UIntPtr.Zero);
         }
 
