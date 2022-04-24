@@ -46,7 +46,7 @@ namespace GTAOBusinesses
         [DllImport("kernel32.dll")]
         private static extern bool CloseHandle(IntPtr handle);
 
-        private readonly Version version = new Version("1.6.3");
+        private readonly Version version = new Version("1.6.4");
 
         private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
         private const string stateFilename = "state.txt";
@@ -108,7 +108,7 @@ namespace GTAOBusinesses
             saveTimer.AutoReset = true;
             saveTimer.Start();
 
-            afkTimer.Elapsed += pressArrowDown;
+            afkTimer.Elapsed += antiAFKAction;
             afkTimer.AutoReset = true;
 
             load();
@@ -547,6 +547,7 @@ namespace GTAOBusinesses
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            hotkeyManager.UnregisterAll();
             settings.Save();
         }
 
@@ -589,11 +590,11 @@ namespace GTAOBusinesses
         [DllImport("user32.dll")]
         private static extern uint keybd_event(byte bVK, byte bScan, int dwFlags, UIntPtr dwExtraInfo);
 
-        private void pressArrowDown(object sender, ElapsedEventArgs e)
+        private void antiAFKAction(object sender, ElapsedEventArgs e)
         {
-            keybd_event((byte)VirtualKey.Noname, 0x48, 0, UIntPtr.Zero);
-            System.Threading.Thread.Sleep(5);
-            keybd_event((byte)VirtualKey.Noname, 0x48, 2, UIntPtr.Zero);
+            keybd_event((byte)VirtualKey.Noname, (byte)settings.AFKKey, 0, UIntPtr.Zero);
+            System.Threading.Thread.Sleep(50);
+            keybd_event((byte)VirtualKey.Noname, (byte)settings.AFKKey, 2, UIntPtr.Zero);
         }
 
         private unsafe void btAFK_Click(object sender, RoutedEventArgs e)

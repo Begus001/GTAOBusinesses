@@ -23,6 +23,7 @@ namespace GTAOBusinesses
         private readonly Tuple<ModifierKey, VirtualKey>[] bindings;
 
         private bool settingPauseOnClose;
+        private int settingAFKKey;
 
         private Button beingEdited;
 
@@ -48,6 +49,7 @@ namespace GTAOBusinesses
             }
 
             settingPauseOnClose = settingsManager.PauseOnClose;
+            settingAFKKey = settingsManager.AFKKey;
 
             hotkeyManager.UnregisterAll();
 
@@ -96,6 +98,7 @@ namespace GTAOBusinesses
             }
 
             cbPauseOnGameClose.IsChecked = settingPauseOnClose;
+            tbAFKKey.Text = settingAFKKey.ToString("X");
         }
 
         private void btCancel_Click(object sender, RoutedEventArgs e)
@@ -221,6 +224,12 @@ namespace GTAOBusinesses
             hotkeyManager.Save();
             hotkeyManager.ReregisterAll();
             settingsManager.PauseOnClose = settingPauseOnClose;
+            try 
+            { 
+                settingAFKKey = Convert.ToInt32(tbAFKKey.Text, 16);
+                settingsManager.AFKKey = settingAFKKey;
+            }
+            catch { MessageBox.Show("AFK key value invalid, value was not saved!", "Invalid AFK Key", MessageBoxButton.OK, MessageBoxImage.Error); }
             settingsManager.Save();
             Close();
         }
@@ -238,6 +247,12 @@ namespace GTAOBusinesses
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             hotkeyManager.ReregisterAll();
+        }
+
+        private void tbAFKKey_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter || e.Key == Key.Return)
+                btOK_Click(tbAFKKey, null);
         }
     }
 }
