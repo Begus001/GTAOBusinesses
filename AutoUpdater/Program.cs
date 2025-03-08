@@ -28,7 +28,7 @@ namespace AutoUpdater
             Thread.Sleep(200);
 
             Directory.CreateDirectory(dir);
-            WebRequest req = WebRequest.CreateHttp("http://begus.ddns.net/gtaoupdate/GTAOBusinesses.exe");
+            WebRequest req = WebRequest.CreateHttp("https://goisser.net/gtaoupdate/GTAOBusinesses.exe");
             WebResponse resp = req.GetResponse();
             Stream r = resp.GetResponseStream();
             FileStream w = File.Open(tmp, FileMode.OpenOrCreate);
