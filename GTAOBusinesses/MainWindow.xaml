@@ -91,12 +91,12 @@
 				<Button x:Name="btResupplyCocaine" Content="Resupply" Grid.Column="3" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Stretch" Click="btResupplyCocaine_Click" Width="60" Margin="0,8,0,8"/>
 				<Button x:Name="btResupplyMeth" Content="Resupply" Grid.Column="3" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Stretch" Click="btResupplyMeth_Click" Width="60" Margin="0,8,0,8"/>
 				<Button x:Name="btResupplyCounterfeit" Content="Resupply" Grid.Column="3" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Stretch" Click="btResupplyCounterfeit_Click" Width="60" Margin="0,8,0,8"/>
-				<Button x:Name="btResupplyAcid" Content="Resupply" Grid.Column="3" HorizontalAlignment="Left" Grid.Row="5" VerticalAlignment="Stretch" Click="btResupplyCounterfeit_Click" Width="60" Margin="0,8,0,8"/>
+				<Button x:Name="btResupplyAcid" Content="Resupply" Grid.Column="3" HorizontalAlignment="Left" Grid.Row="5" VerticalAlignment="Stretch" Click="btResupplyAcid_Click" Width="60" Margin="0,8,0,8"/>
 				<Button x:Name="btSellBunker" Content="Sell" Grid.Column="3" HorizontalAlignment="Right" Margin="0,8,5,8" Grid.Row="1" VerticalAlignment="Stretch" Click="btSellBunker_Click" Width="60"/>
 				<Button x:Name="btSellCocaine" Content="Sell" Grid.Column="3" HorizontalAlignment="Right" Margin="0,8,5,8" Grid.Row="2" VerticalAlignment="Stretch" Click="btSellCocaine_Click" Width="60"/>
 				<Button x:Name="btSellMeth" Content="Sell" Grid.Column="3" HorizontalAlignment="Right" Margin="0,8,5,8" Grid.Row="3" VerticalAlignment="Stretch" Click="btSellMeth_Click" Width="60"/>
 				<Button x:Name="btSellCounterfeit" Content="Sell" Grid.Column="3" HorizontalAlignment="Right" Margin="0,8,5,8" Grid.Row="4" VerticalAlignment="Stretch" Click="btSellCounterfeit_Click" Width="60"/>
-				<Button x:Name="btSellAcid" Content="Sell" Grid.Column="3" HorizontalAlignment="Right" Margin="0,8,5,8" Grid.Row="5" VerticalAlignment="Stretch" Click="btSellCounterfeit_Click" Width="60"/>
+				<Button x:Name="btSellAcid" Content="Sell" Grid.Column="3" HorizontalAlignment="Right" Margin="0,8,5,8" Grid.Row="5" VerticalAlignment="Stretch" Click="btSellAcid_Click" Width="60"/>
 				<Label x:Name="lbSupBunker" Content="00:00:00" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" FontSize="14" IsHitTestVisible="False"/>
 				<Label x:Name="lbSupCocaine" Content="00:00:00" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" FontSize="14" IsHitTestVisible="False"/>
 				<Label x:Name="lbSupMeth" Content="00:00:00" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="3" VerticalAlignment="Center" FontSize="14" IsHitTestVisible="False"/>

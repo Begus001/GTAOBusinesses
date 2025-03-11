@@ -46,7 +46,7 @@ namespace GTAOBusinesses
 		[DllImport("kernel32.dll")]
 		private static extern bool CloseHandle(IntPtr handle);
 
-		private readonly Version version = new Version("1.9.0");
+		private readonly Version version = new Version("1.9.1");
 
 		private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
 		private const string stateFilename = "state.txt";
@@ -315,6 +315,12 @@ namespace GTAOBusinesses
 			save();
 		}
 
+		private void btResupplyAcid_Click(object sender, RoutedEventArgs e)
+		{
+			businesses[4].ToggleResupply();
+			save();
+		}
+
 		private void btSellBunker_Click(object sender, RoutedEventArgs e)
 		{
 			businesses[0].SellProduct();
@@ -336,6 +342,12 @@ namespace GTAOBusinesses
 		private void btSellCounterfeit_Click(object sender, RoutedEventArgs e)
 		{
 			businesses[3].SellProduct();
+			save();
+		}
+
+		private void btSellAcid_Click(object sender, RoutedEventArgs e)
+		{
+			businesses[4].SellProduct();
 			save();
 		}
 
