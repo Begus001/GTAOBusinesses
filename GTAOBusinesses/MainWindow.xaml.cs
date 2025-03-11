@@ -46,7 +46,7 @@ namespace GTAOBusinesses
 		[DllImport("kernel32.dll")]
 		private static extern bool CloseHandle(IntPtr handle);
 
-		private readonly Version version = new Version("1.8.0");
+		private readonly Version version = new Version("1.9.0");
 
 		private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
 		private const string stateFilename = "state.txt";
@@ -59,17 +59,19 @@ namespace GTAOBusinesses
 
 		private readonly SettingsManager settings;
 
-		private const int numBusinesses = 4;
+		private const int numBusinesses = 5;
 
 		private const int bunkerSup = 2 * 3600 + 24 * 60;
 		private const int cocaineSup = 2 * 3600;
 		private const int methSup = 2 * 3600 + 24 * 60;
 		private const int counterSup = 2 * 3600 + 40 * 60;
+		private const int acidSup = 1 * 3600 + 30 * 60;
 
 		private const int bunkerProd = bunkerSup * 5;
 		private const int cocaineProd = (int)(cocaineSup * 2.5);
 		private const int methProd = (int)(methSup * 2.5);
 		private const int counterProd = counterSup * 2;
+		private const int acidProd = acidSup * 2;
 
 		private readonly Business[] businesses = new Business[numBusinesses];
 
@@ -101,6 +103,7 @@ namespace GTAOBusinesses
 			businesses[1] = new Business(cocaineSup, cocaineProd, pbSupCocaine, pbProdCocaine, lbSupCocaine, lbProdCocaine, btResupplyCocaine, btSellCocaine);
 			businesses[2] = new Business(methSup, methProd, pbSupMeth, pbProdMeth, lbSupMeth, lbProdMeth, btResupplyMeth, btSellMeth);
 			businesses[3] = new Business(counterSup, counterProd, pbSupCounterfeit, pbProdCounterfeit, lbSupCounterfeit, lbProdCounterfeit, btResupplyCounterfeit, btSellCounterfeit);
+			businesses[4] = new Business(acidSup, acidProd, pbSupAcid, pbProdAcid, lbSupAcid, lbProdAcid, btResupplyAcid, btSellAcid);
 
 			btPause.Background = Brushes.MediumSeaGreen;
 
@@ -262,7 +265,7 @@ namespace GTAOBusinesses
 				isGTAOpen = false;
 			}
 
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < numBusinesses; i++)
 			{
 				if (settings.Paused)
 					businesses[i].Pause();
@@ -370,6 +373,10 @@ namespace GTAOBusinesses
 					businesses[3].SetSupplyBars(val);
 					break;
 
+				case "pbSupAcid":
+					businesses[4].SetSupplyBars(val);
+					break;
+
 				case "pbProdBunker":
 					businesses[0].SetProductBars(val);
 					break;
@@ -384,6 +391,10 @@ namespace GTAOBusinesses
 
 				case "pbProdCounterfeit":
 					businesses[3].SetProductBars(val);
+					break;
+
+				case "pbProdAcid":
+					businesses[4].SetProductBars(val);
 					break;
 
 				default:
