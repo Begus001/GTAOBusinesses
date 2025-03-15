@@ -46,7 +46,7 @@ namespace GTAOBusinesses
 		[DllImport("kernel32.dll")]
 		private static extern bool CloseHandle(IntPtr handle);
 
-		private readonly Version version = new Version("1.9.1");
+		private readonly Version version = new Version("1.9.2");
 
 		private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
 		private const string stateFilename = "state.txt";
@@ -65,13 +65,13 @@ namespace GTAOBusinesses
 		private const int cocaineSup = 2 * 3600;
 		private const int methSup = 2 * 3600 + 24 * 60;
 		private const int counterSup = 2 * 3600 + 40 * 60;
-		private const int acidSup = 1 * 3600 + 30 * 60;
+		private const int acidSup = 2 * 3600 + 30 * 60;
 
 		private const int bunkerProd = bunkerSup * 5;
 		private const int cocaineProd = (int)(cocaineSup * 2.5);
 		private const int methProd = (int)(methSup * 2.5);
 		private const int counterProd = counterSup * 2;
-		private const int acidProd = acidSup * 2;
+		private const int acidProd = (int)(acidSup * 1.6);
 
 		private readonly Business[] businesses = new Business[numBusinesses];
 
