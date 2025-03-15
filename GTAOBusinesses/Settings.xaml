@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GTAOBusinesses"
         mc:Ignorable="d"
-        Title="Settings" Height="350" Width="720" ResizeMode="NoResize" KeyDown="Window_KeyDown" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+        Title="Settings" Height="400" Width="720" ResizeMode="NoResize" KeyDown="Window_KeyDown" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -49,6 +49,7 @@
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
                     <Label Content="Pause" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0"/>
                     <Button x:Name="btShortcutPause" Tag="0" Margin="0,5,10,5" Grid.Column="1" Grid.Row="0" Click="btShortcut_Click"/>
@@ -58,26 +59,30 @@
 					<Button x:Name="btShortcutKillGTA" Tag="10" Margin="0,5,10,5" Grid.Column="1" Grid.Row="2" Click="btShortcut_Click"/>
                     <Label Content="AFK Anti-Kick" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="3"/>
 					<Button x:Name="btShortcutAFK" Tag="11" Margin="0,5,10,5" Grid.Column="1" Grid.Row="3" Click="btShortcut_Click"/>
-                    <Label Content="Resupply Bunker" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="4"/>
-					<Button x:Name="btShortcutResupplyBunker" Tag="2" Margin="0,5,10,5" Grid.Column="1" Grid.Row="4" Click="btShortcut_Click"/>
-                    <Label Content="Resupply Cocaine" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="5"/>
-                    <Button x:Name="btShortcutResupplyCocaine" Tag="3" Margin="0,5,10,5" Grid.Column="1" Grid.Row="5" Click="btShortcut_Click"/>
-                    <Label Content="Resupply Meth" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="6"/>
-					<Button x:Name="btShortcutResupplyMeth" Tag="4" Margin="0,5,10,5" Grid.Column="1" Grid.Row="6" Click="btShortcut_Click"/>
-                    <Label Content="Resupply Counterfeit" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="0"/>
-					<Button x:Name="btShortcutResupplyCounterfeit" Tag="5" Margin="0,5,10,5" Grid.Column="3" Grid.Row="0" Click="btShortcut_Click"/>
-                    <Label Content="Resupply Acid" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="1"/>
-					<Button x:Name="btShortcutResupplyAcid" Tag="12" Margin="0,5,10,5" Grid.Column="3" Grid.Row="1" Click="btShortcut_Click"/>
-                    <Label Content="Sell Bunker" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="2"/>
-					<Button x:Name="btShortcutSellBunker" Tag="6" Margin="0,5,10,5" Grid.Column="3" Grid.Row="2" Click="btShortcut_Click"/>
-                    <Label Content="Sell Cocaine" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="3"/>
-					<Button x:Name="btShortcutSellCocaine" Tag="7" Margin="0,5,10,5" Grid.Column="3" Grid.Row="3" Click="btShortcut_Click"/>
-                    <Label Content="Sell Meth" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="4"/>
-					<Button x:Name="btShortcutSellMeth" Tag="8" Margin="0,5,10,5" Grid.Column="3" Grid.Row="4" Click="btShortcut_Click"/>
-                    <Label Content="Sell Counterfeit" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="5"/>
-					<Button x:Name="btShortcutSellCounterfeit" Tag="9" Margin="0,5,10,5" Grid.Column="3" Grid.Row="5" Click="btShortcut_Click"/>
-                    <Label Content="Sell Acid" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="6"/>
-					<Button x:Name="btShortcutSellAcid" Tag="13" Margin="0,5,10,5" Grid.Column="3" Grid.Row="6" Click="btShortcut_Click"/>
+                    <Label Content="AutoFly Heli" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="4"/>
+					<Button x:Name="btShortcutAutoFlyHeli" Tag="14" Margin="0,5,10,5" Grid.Column="1" Grid.Row="4" Click="btShortcut_Click"/>
+                    <Label Content="AutoFly Plane" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="5"/>
+					<Button x:Name="btShortcutAutoFlyPlane" Tag="15" Margin="0,5,10,5" Grid.Column="1" Grid.Row="5" Click="btShortcut_Click"/>
+                    <Label Content="Resupply Bunker" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="6"/>
+					<Button x:Name="btShortcutResupplyBunker" Tag="2" Margin="0,5,10,5" Grid.Column="1" Grid.Row="6" Click="btShortcut_Click"/>
+                    <Label Content="Resupply Cocaine" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="7"/>
+                    <Button x:Name="btShortcutResupplyCocaine" Tag="3" Margin="0,5,10,5" Grid.Column="1" Grid.Row="7" Click="btShortcut_Click"/>
+                    <Label Content="Resupply Meth" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="0"/>
+					<Button x:Name="btShortcutResupplyMeth" Tag="4" Margin="0,5,10,5" Grid.Column="3" Grid.Row="0" Click="btShortcut_Click"/>
+                    <Label Content="Resupply Counterfeit" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="1"/>
+					<Button x:Name="btShortcutResupplyCounterfeit" Tag="5" Margin="0,5,10,5" Grid.Column="3" Grid.Row="1" Click="btShortcut_Click"/>
+                    <Label Content="Resupply Acid" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="2"/>
+					<Button x:Name="btShortcutResupplyAcid" Tag="12" Margin="0,5,10,5" Grid.Column="3" Grid.Row="2" Click="btShortcut_Click"/>
+                    <Label Content="Sell Bunker" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="3"/>
+					<Button x:Name="btShortcutSellBunker" Tag="6" Margin="0,5,10,5" Grid.Column="3" Grid.Row="3" Click="btShortcut_Click"/>
+                    <Label Content="Sell Cocaine" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="4"/>
+					<Button x:Name="btShortcutSellCocaine" Tag="7" Margin="0,5,10,5" Grid.Column="3" Grid.Row="4" Click="btShortcut_Click"/>
+                    <Label Content="Sell Meth" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="5"/>
+					<Button x:Name="btShortcutSellMeth" Tag="8" Margin="0,5,10,5" Grid.Column="3" Grid.Row="5" Click="btShortcut_Click"/>
+                    <Label Content="Sell Counterfeit" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="6"/>
+					<Button x:Name="btShortcutSellCounterfeit" Tag="9" Margin="0,5,10,5" Grid.Column="3" Grid.Row="6" Click="btShortcut_Click"/>
+                    <Label Content="Sell Acid" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Grid.Row="7"/>
+					<Button x:Name="btShortcutSellAcid" Tag="13" Margin="0,5,10,5" Grid.Column="3" Grid.Row="7" Click="btShortcut_Click"/>
 
                 </Grid>
             </TabItem>

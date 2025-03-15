@@ -46,7 +46,7 @@ namespace GTAOBusinesses
 		[DllImport("kernel32.dll")]
 		private static extern bool CloseHandle(IntPtr handle);
 
-		private readonly Version version = new Version("1.9.3");
+		private readonly Version version = new Version("1.9.4");
 
 		private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
 		private const string stateFilename = "state.txt";
@@ -78,6 +78,7 @@ namespace GTAOBusinesses
 		private readonly Timer saveTimer = new Timer(1000);
 
 		private readonly Timer afkTimer = new Timer();
+		private readonly Timer autoFlyTimer = new Timer();
 
 		private readonly HotkeyManager hotkeyManager;
 
@@ -90,6 +91,8 @@ namespace GTAOBusinesses
 
 		private bool isGTAOpen = false;
 		private bool afkEnabled = false;
+		private bool heli = false;
+		private bool plane = false;
 
 		public MainWindow()
 		{
@@ -120,6 +123,10 @@ namespace GTAOBusinesses
 			afkTimer.Interval = settings.AFKKeyInterval;
 			afkTimer.Elapsed += antiAFKAction;
 			afkTimer.AutoReset = true;
+
+			autoFlyTimer.Interval = 500;
+			autoFlyTimer.Elapsed += autoFly;
+			autoFlyTimer.AutoReset = true;
 
 			hotkeyManager = new HotkeyManager(this, keymapPath);
 
@@ -177,6 +184,12 @@ namespace GTAOBusinesses
 					break;
 				case HotkeyAction.SellAcid:
 					btSellAcid_Click(btSellAcid, null);
+					break;
+				case HotkeyAction.FlyHeli:
+					btAutoFlyHelicopter_Click(btAutoFlyHelicopter, null);
+					break;
+				case HotkeyAction.FlyPlane:
+					btAutoFlyPlane_Click(btAutoFlyPlane, null);
 					break;
 			}
 		}
@@ -293,6 +306,17 @@ namespace GTAOBusinesses
 					btAFK.Background = Brushes.MediumSeaGreen;
 				else
 					btAFK.ClearValue(Control.BackgroundProperty);
+
+				if (heli)
+					btAutoFlyHelicopter.Background = Brushes.MediumSeaGreen;
+				else
+					btAutoFlyHelicopter.ClearValue(Control.BackgroundProperty);
+
+				if (plane)
+					btAutoFlyPlane.Background = Brushes.MediumSeaGreen;
+				else
+					btAutoFlyPlane.ClearValue(Control.BackgroundProperty);
+
 			});
 			save();
 		}
@@ -642,6 +666,20 @@ namespace GTAOBusinesses
 			keybd_event((byte)VirtualKey.Noname, (byte)settings.AFKKey, 2, UIntPtr.Zero);
 		}
 
+		private void autoFly(object sender, ElapsedEventArgs e)
+		{
+			if (plane)
+			{
+				keybd_event((byte)VirtualKey.Noname, (byte)17, 0, UIntPtr.Zero);
+			}
+			else if (heli)
+			{
+				keybd_event((byte)VirtualKey.Noname, (byte)17, 0, UIntPtr.Zero);
+				keybd_event((byte)VirtualKey.Noname, (byte)72, 0, UIntPtr.Zero);
+			}
+			Debug.WriteLine("Pressing");
+		}
+
 		private unsafe void btAFK_Click(object sender, RoutedEventArgs e)
 		{
 			afkEnabled = !afkEnabled;
@@ -649,6 +687,42 @@ namespace GTAOBusinesses
 				afkTimer.Start();
 			else
 				afkTimer.Stop();
+			keybd_event((byte)VirtualKey.Noname, (byte)settings.AFKKey, 2, UIntPtr.Zero);
+			tick(null, null);
+		}
+
+		private void btAutoFlyHelicopter_Click(object sender, RoutedEventArgs e)
+		{
+			if (plane) return;
+
+			heli = !heli;
+			if (heli)
+			{
+				autoFlyTimer.Start();
+			}
+			else
+			{
+				autoFlyTimer.Stop();
+				keybd_event((byte)VirtualKey.Noname, (byte)17, 2, UIntPtr.Zero);
+				keybd_event((byte)VirtualKey.Noname, (byte)72, 2, UIntPtr.Zero);
+			}
+			tick(null, null);
+		}
+
+		private void btAutoFlyPlane_Click(object sender, RoutedEventArgs e)
+		{
+			if (heli) return;
+
+			plane = !plane;
+			if (plane)
+			{
+				autoFlyTimer.Start();
+			}
+			else
+			{
+				autoFlyTimer.Stop();
+				keybd_event((byte)VirtualKey.Noname, (byte)17, 2, UIntPtr.Zero);
+			}
 			tick(null, null);
 		}
 

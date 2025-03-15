@@ -49,8 +49,10 @@
 					<ColumnDefinition Width="120"/>
 				</Grid.ColumnDefinitions>
 				<Button x:Name="btPause" Content="Pause" Margin="10,10,10,10" Click="btPause_Click" Grid.Column="0" BorderThickness="0.5"/>
-				<Button x:Name="btKillProcess" Content="Kill GTA" Margin="10,10,10,10" Click="btKillProcess_Click" Grid.Column="4"/>
+				<Button x:Name="btKillProcess" Content="Kill GTA" Margin="10,10,10,10" Click="btKillProcess_Click" Grid.Column="2"/>
 				<Button x:Name="btAFK" Content="AFK" Margin="10,10,10,10" Click="btAFK_Click" Grid.Column="6"/>
+				<Button x:Name="btAutoFlyHelicopter" Content="Fly Heli" Margin="10,10,10,10" Click="btAutoFlyHelicopter_Click" Grid.Column="4"/>
+				<Button x:Name="btAutoFlyPlane" Content="Fly Plane" Margin="10,10,10,10" Click="btAutoFlyPlane_Click" Grid.Column="5"/>
 				<Button x:Name="btSuspend" Content="Solo Session" Margin="10,10,10,10" Click="btSuspend_Click" Grid.Column="7"/>
 			</Grid>
 			<Grid Grid.Row="1">

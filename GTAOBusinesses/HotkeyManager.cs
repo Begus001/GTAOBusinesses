@@ -57,6 +57,8 @@ namespace GTAOBusinesses
 			defaults[(int)HotkeyAction.AFK] = Tuple.Create(ModifierKey.SHIFT, VirtualKey.Add);
 			defaults[(int)HotkeyAction.ResupplyAcid] = Tuple.Create(ModifierKey.CTRL, VirtualKey.NumPad5);
 			defaults[(int)HotkeyAction.SellAcid] = Tuple.Create(ModifierKey.CTRL | ModifierKey.ALT, VirtualKey.NumPad5);
+			defaults[(int)HotkeyAction.FlyHeli] = Tuple.Create(ModifierKey.CTRL, VirtualKey.Divide);
+			defaults[(int)HotkeyAction.FlyPlane] = Tuple.Create(ModifierKey.CTRL, VirtualKey.Multiply);
 
 			SaveLocation = saveLocation;
 
@@ -240,20 +242,22 @@ namespace GTAOBusinesses
 
 	public enum HotkeyAction : uint
 	{
-		Pause,
-		SoloSession,
-		ResupplyBunker,
-		ResupplyCocaine,
-		ResupplyMeth,
-		ResupplyCounterfeit,
-		SellBunker,
-		SellCocaine,
-		SellMeth,
-		SellCounterfeit,
-		KillProcess,
-		AFK,
-		ResupplyAcid,
-		SellAcid,
+		Pause = 0,
+		SoloSession = 1,
+		ResupplyBunker = 2,
+		ResupplyCocaine = 3,
+		ResupplyMeth = 4,
+		ResupplyCounterfeit = 5,
+		SellBunker = 6,
+		SellCocaine = 7,
+		SellMeth = 8,
+		SellCounterfeit = 9,
+		KillProcess = 10,
+		AFK = 11,
+		ResupplyAcid = 12,
+		SellAcid = 13,
+		FlyHeli = 14,
+		FlyPlane = 15,
 	}
 
 	public enum ModifierKey : uint
