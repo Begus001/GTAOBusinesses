@@ -46,7 +46,7 @@ namespace GTAOBusinesses
 		[DllImport("kernel32.dll")]
 		private static extern bool CloseHandle(IntPtr handle);
 
-		private readonly Version version = new Version("1.9.2");
+		private readonly Version version = new Version("1.9.3");
 
 		private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
 		private const string stateFilename = "state.txt";
@@ -171,6 +171,12 @@ namespace GTAOBusinesses
 					break;
 				case HotkeyAction.AFK:
 					btAFK_Click(btAFK, null);
+					break;
+				case HotkeyAction.ResupplyAcid:
+					btResupplyAcid_Click(btResupplyAcid, null);
+					break;
+				case HotkeyAction.SellAcid:
+					btSellAcid_Click(btSellAcid, null);
 					break;
 			}
 		}

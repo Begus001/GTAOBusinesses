@@ -75,10 +75,12 @@ namespace GTAOBusinesses
         {
             for (int i = 0; i < hotkeyManager.NumActions; i++)
             {
-                if (bindings[i] != null)
+                var btn = hotkeyButtons[i];
+                var num = Convert.ToUInt32(btn.Tag);
+                if (bindings[num] != null)
                 {
-                    hotkeyButtons[i].Content = HotkeyManager.ModToString(bindings[i].Item1);
-                    hotkeyButtons[i].Content += bindings[i].Item2.ToString();
+                    btn.Content = HotkeyManager.ModToString(bindings[num].Item1);
+                    btn.Content += bindings[num].Item2.ToString();
                 }
                 else
                 {
@@ -135,10 +137,11 @@ namespace GTAOBusinesses
             {
                 case Key.Escape:
                     for (int i = 0; i < bindings.Length; i++)
-                    {
-                        if (hotkeyButtons[i].Equals(beingEdited))
+					{
+						var num = Convert.ToUInt32(hotkeyButtons[i].Tag);
+						if (hotkeyButtons[i].Equals(beingEdited))
                         {
-                            bindings[i] = null;
+                            bindings[num] = null;
                         }
                     }
                     goto end;
@@ -163,11 +166,12 @@ namespace GTAOBusinesses
             {
                 if (hotkeyButtons[i].Equals(beingEdited))
                 {
+                    var num = Convert.ToUInt32(hotkeyButtons[i].Tag);
                     VirtualKey key;
                     Enum.TryParse(e.Key.ToString(), out key);
                     Tuple<ModifierKey, VirtualKey> t = Tuple.Create((ModifierKey)mod, key);
                     if (!bindings.Contains(t))
-                        bindings[i] = t;
+                        bindings[num] = t;
                 }
             }
 
@@ -179,36 +183,11 @@ namespace GTAOBusinesses
             updateUI();
         }
 
-        private void Window_KeyUp(object sender, KeyEventArgs e)
-        {
-            //if (beingEdited == null)
-            //    return;
-            //
-            //switch (e.Key)
-            //{
-            //    case Key.LeftAlt:
-            //    case Key.RightAlt:
-            //        mod &= ~(uint)1;
-            //        updateUI();
-            //        return;
-            //    case Key.LeftCtrl:
-            //    case Key.RightCtrl:
-            //        mod &= ~(uint)2;
-            //        updateUI();
-            //        return;
-            //    case Key.LeftShift:
-            //    case Key.RightShift:
-            //        mod &= ~(uint)4;
-            //        updateUI();
-            //        return;
-            //}
-        }
-
         private void btOK_Click(object sender, RoutedEventArgs e)
         {
             for (int i = 0; i < bindings.Length; i++)
-            {
-                if (bindings[i] != null)
+			{
+				if (bindings[i] != null)
                 { 
                     if (!bindings[i].Equals(hotkeyManager.Bindings[i]))
                     {
