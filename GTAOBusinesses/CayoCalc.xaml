@@ -1,0 +1,59 @@
+﻿<Window x:Class="GTAOBusinesses.CayoCalc"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GTAOBusinesses"
+        mc:Ignorable="d"
+        Title="CayoCalc"
+		Width="450"
+		Height="250"
+		MinWidth="450"
+		MinHeight="250"
+		FontSize="20">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto" />
+			<RowDefinition />
+			<RowDefinition Height="auto" />
+		</Grid.RowDefinitions>
+		<Grid Grid.Row="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<Label Content="Target:" Margin="2"  HorizontalAlignment="Right" Grid.Column="0" />
+			<TextBox x:Name="tbTarget" Margin="2" Text="0" Width="100" Grid.Column="1" HorizontalAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" KeyUp="inputChanged" />
+		</Grid>
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition />
+				<RowDefinition />
+				<RowDefinition />
+			</Grid.RowDefinitions>
+			<TextBox x:Name="tbNum1" Margin="2" Grid.Row="0" Grid.Column="0" Text="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" KeyUp="inputChanged" />
+			<TextBox x:Name="tbNum2" Margin="2" Grid.Row="1" Grid.Column="0" Text="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" KeyUp="inputChanged" />
+			<TextBox x:Name="tbNum3" Margin="2" Grid.Row="2" Grid.Column="0" Text="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" KeyUp="inputChanged" />
+			<ComboBox x:Name="cbMul1" Margin="2" Grid.Row="0" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" SelectedIndex="0" SelectionChanged="inputChanged" KeyUp="inputChanged">
+				<ComboBoxItem Content="x1" />
+				<ComboBoxItem Content="x2" />
+				<ComboBoxItem Content="x10" />
+			</ComboBox>
+			<ComboBox x:Name="cbMul2" Margin="2" Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"  SelectedIndex="0" SelectionChanged="inputChanged" KeyUp="inputChanged">
+				<ComboBoxItem Content="x1" />
+				<ComboBoxItem Content="x2" />
+				<ComboBoxItem Content="x10" />
+			</ComboBox>
+			<ComboBox x:Name="cbMul3" Margin="2" Grid.Row="2" Grid.Column="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" SelectedIndex="0" SelectionChanged="inputChanged" KeyUp="inputChanged">
+				<ComboBoxItem Content="x1" />
+				<ComboBoxItem Content="x2" />
+				<ComboBoxItem Content="x10" />
+			</ComboBox>
+		</Grid>
+		<Label x:Name="lbResult" FontSize="24" Grid.Row="2" Content="Enter Data" Margin="5 12" HorizontalAlignment="Center"/>
+	</Grid>
+</Window>

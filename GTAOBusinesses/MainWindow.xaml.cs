@@ -46,7 +46,7 @@ namespace GTAOBusinesses
 		[DllImport("kernel32.dll")]
 		private static extern bool CloseHandle(IntPtr handle);
 
-		private readonly Version version = new Version("1.9.4");
+		private readonly Version version = new Version("1.10.0");
 
 		private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
 		private const string stateFilename = "state.txt";
@@ -730,5 +730,11 @@ namespace GTAOBusinesses
 		{
 			Environment.Exit(0);
 		}
-	}
+
+		private void CayoCalc_Click(object sender, RoutedEventArgs e)
+		{
+			var win = new CayoCalc();
+			win.Show();
+        }
+    }
 }

@@ -21,10 +21,7 @@
 				<MenuItem x:Name="btExitMenu" Header="Exit" Click="btExitMenu_Click"/>
 			</MenuItem>
 			<MenuItem Header="Utils">
-				<MenuItem x:Name="btSuspendMenu" Header="Solo Session" Click="btSuspend_Click"/>
-				<MenuItem x:Name="btAFKMenu" Header="AFK Anti-Kick" Click="btAFK_Click"/>
-				<Separator/>
-				<MenuItem x:Name="btKillProcessMenu" Header="Kill GTA" Click="btKillProcess_Click"/>
+				<MenuItem Header="CayoCalc" Click="CayoCalc_Click"/>
 			</MenuItem>
 			<MenuItem Header="Misc">
 				<MenuItem x:Name="btUpdate" Header="Check for update" Click="btUpdate_Click"/>
