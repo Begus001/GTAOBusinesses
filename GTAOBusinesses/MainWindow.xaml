@@ -71,7 +71,8 @@
 				<Label Content="Cocaine" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="2" VerticalAlignment="Center" Height="26" Width="52"/>
 				<Label Content="Meth" HorizontalAlignment="Center" Margin="0,0,0,0" Grid.Row="3" VerticalAlignment="Center" Height="26" Width="38"/>
 				<Label Content="Counterfeit" HorizontalAlignment="Center" Grid.Row="4" VerticalAlignment="Center" Height="26" Width="70" Margin="0,0,0,0"/>
-				<Label Content="Acid" HorizontalAlignment="Center" Grid.Row="5" VerticalAlignment="Center" Height="26" Width="auto" Margin="0,0,0,0"/>
+				<Label Content="Acid" HorizontalAlignment="Left" Grid.Row="5" VerticalAlignment="Center" Height="26" Width="auto" Margin="5,0,0,0"/>
+				<Button x:Name="btBoostAcid" Content="Boost" HorizontalAlignment="Right" Grid.Row="5" VerticalAlignment="Center" Height="26" Width="auto" Margin="0,0,0,0" Click="btBoostAcid_Click"/>
 				<Label Content="Business" HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="56" Grid.Row="0"/>
 				<Label Content="Supplies" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="54" Grid.Row="0"/>
 				<Label Content="Product" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="51" Grid.Row="0"/>

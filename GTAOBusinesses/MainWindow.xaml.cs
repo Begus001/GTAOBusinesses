@@ -46,7 +46,7 @@ namespace GTAOBusinesses
 		[DllImport("kernel32.dll")]
 		private static extern bool CloseHandle(IntPtr handle);
 
-		private readonly Version version = new Version("1.10.0");
+		private readonly Version version = new Version("1.11.0");
 
 		private readonly string stateDir = @"C:\Users\" + Environment.UserName + @"\AppData\Roaming\GTAOBusinesses\";
 		private const string stateFilename = "state.txt";
@@ -106,7 +106,7 @@ namespace GTAOBusinesses
 			businesses[1] = new Business(cocaineSup, cocaineProd, pbSupCocaine, pbProdCocaine, lbSupCocaine, lbProdCocaine, btResupplyCocaine, btSellCocaine);
 			businesses[2] = new Business(methSup, methProd, pbSupMeth, pbProdMeth, lbSupMeth, lbProdMeth, btResupplyMeth, btSellMeth);
 			businesses[3] = new Business(counterSup, counterProd, pbSupCounterfeit, pbProdCounterfeit, lbSupCounterfeit, lbProdCounterfeit, btResupplyCounterfeit, btSellCounterfeit);
-			businesses[4] = new Business(acidSup, acidProd, pbSupAcid, pbProdAcid, lbSupAcid, lbProdAcid, btResupplyAcid, btSellAcid);
+			businesses[4] = new Business(acidSup, acidProd, pbSupAcid, pbProdAcid, lbSupAcid, lbProdAcid, btResupplyAcid, btSellAcid, btBoostAcid);
 
 			btPause.Background = Brushes.MediumSeaGreen;
 
@@ -215,6 +215,13 @@ namespace GTAOBusinesses
 					int resupplyTime = Convert.ToInt32(file.ReadLine());
 					if (resupplyTime > 0)
 						businesses[i].SetResupplyTimeLeft(resupplyTime);
+
+					if (businesses[i].isAcid())
+					{
+						int boostTime = Convert.ToInt32(file.ReadLine());
+						if (boostTime > 0)
+							businesses[i].SetBoostTimeLeft(boostTime);
+					}
 				}
 			}
 			catch
@@ -240,6 +247,10 @@ namespace GTAOBusinesses
 				file.WriteLine(businesses[i].GetSupplySeconds().ToString());
 				file.WriteLine(businesses[i].GetProductSeconds().ToString());
 				file.WriteLine(businesses[i].GetResupplyTimeLeft().ToString());
+				if (businesses[i].isAcid())
+				{
+					file.WriteLine(businesses[i].GetBoostTimeLeft().ToString());
+				}
 			}
 
 			file.Close();
@@ -736,5 +747,11 @@ namespace GTAOBusinesses
 			var win = new CayoCalc();
 			win.Show();
         }
-    }
+
+		private void btBoostAcid_Click(object sender, RoutedEventArgs e)
+		{
+			businesses[4].ToggleBoostAcid();
+			save();
+		}
+	}
 }

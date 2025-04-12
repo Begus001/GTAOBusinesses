@@ -21,6 +21,7 @@ namespace GTAOBusinesses
 
         private bool isBeingResupplied = false;
         private bool isPaused = false;
+        private bool isBoosted = false;
 
         private ProgressBar supplyBar;
         private ProgressBar productBar;
@@ -28,14 +29,18 @@ namespace GTAOBusinesses
         private Label productLabel;
         private Button resupplyBtn;
         private Button sellBtn;
+        private Button boostBtn;
 
         private const int resupplyTime = 10 * 60 - 1;
+        private const int boostTime = 48 * 60 - 1;
         private int resupplyCounter = 0;
+        private int boostCounter = 0;
 
         private readonly Timer timer = new Timer(1000);
         private readonly Timer resupplyTimer = new Timer(1000);
+        private readonly Timer boostTimer = new Timer(1000);
 
-        public Business(int supplyFullSeconds, int productFullSeconds, ProgressBar supplyBar, ProgressBar productBar, Label supplyLabel, Label productLabel, Button resupplyBtn, Button sellBtn)
+        public Business(int supplyFullSeconds, int productFullSeconds, ProgressBar supplyBar, ProgressBar productBar, Label supplyLabel, Label productLabel, Button resupplyBtn, Button sellBtn, Button boostBtn = null)
         {
             this.supplyFullSeconds = supplyFullSeconds;
             this.productFullSeconds = productFullSeconds;
@@ -49,12 +54,28 @@ namespace GTAOBusinesses
             resupplyTimer.AutoReset = true;
             resupplyTimer.Start();
 
+            boostTimer.Elapsed += (_s, _e) =>
+            {
+				if (boostCounter <= 0 && isBoosted)
+				{
+					boostTimer.Stop();
+                    ToggleBoostAcid();
+				}
+				else if (!isPaused && isBoosted)
+				{
+					boostCounter--;
+				}
+			};
+            boostTimer.AutoReset = true;
+            boostTimer.Start();
+
             this.supplyBar = supplyBar;
             this.productBar = productBar;
             this.supplyLabel = supplyLabel;
             this.productLabel = productLabel;
             this.resupplyBtn = resupplyBtn;
             this.sellBtn = sellBtn;
+            this.boostBtn = boostBtn;
 
             supplyBar.Maximum = supplyFullSeconds;
             productBar.Maximum = productFullSeconds;
@@ -65,11 +86,18 @@ namespace GTAOBusinesses
             return string.Format("{0:D2}:{1:D2}:{2:D2}", secs / 3600, secs / 60 % 60, secs % 60);
         }
 
+        private string clockFormatMin(int secs)
+        {
+            return string.Format("{0:D2}:{1:D2}", secs / 60 % 60, secs % 60);
+        }
+
         private void updateUI()
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                supplyBar.Value = supplySeconds;
+				supplyBar.Maximum = supplyFullSeconds;
+				productBar.Maximum = productFullSeconds;
+				supplyBar.Value = supplySeconds;
                 productBar.Value = productFullSeconds - productSeconds;
 
                 supplyLabel.Content = clockFormat(supplySeconds);
@@ -97,7 +125,21 @@ namespace GTAOBusinesses
                     supplyBar.ClearValue(Control.BackgroundProperty);
                     resupplyBtn.Content = "Resupply";
                 }
-            });
+
+                if (isAcid())
+                {
+					if (isBoosted)
+					{
+						boostBtn.Background = Brushes.LightGoldenrodYellow;
+						boostBtn.Content = clockFormatMin(boostCounter);
+					}
+					else
+					{
+						boostBtn.ClearValue(Control.BackgroundProperty);
+						boostBtn.Content = "Boost";
+					}
+				}
+			});
         }
 
         private void tick(object source, ElapsedEventArgs e)
@@ -142,6 +184,11 @@ namespace GTAOBusinesses
             return resupplyCounter;
         }
 
+        public int GetBoostTimeLeft()
+        {
+            return boostCounter;
+        }
+
         public void SetSupplySeconds(int secs)
         {
             if (secs > supplyFullSeconds || secs < 0)
@@ -179,6 +226,13 @@ namespace GTAOBusinesses
             updateUI();
         }
 
+        public void SetBoostTimeLeft(int boostTime)
+        {
+            ToggleBoostAcid();
+            boostCounter = boostTime;
+            updateUI();
+        }
+
         public void ToggleResupply()
         {
             if (!isBeingResupplied)
@@ -205,6 +259,7 @@ namespace GTAOBusinesses
         {
             timer.Stop();
             resupplyTimer.Stop();
+            boostTimer.Stop();
             isPaused = true;
         }
 
@@ -212,7 +267,37 @@ namespace GTAOBusinesses
         {
             timer.Start();
             resupplyTimer.Start();
+            boostTimer.Start();
             isPaused = false;
+        }
+
+        public bool isAcid()
+        {
+            return boostBtn != null;
+        }
+
+        public void ToggleBoostAcid()
+        {
+            if (!isAcid()) return;
+
+            if (!isBoosted)
+            {
+                supplyFullSeconds = (int)(supplyFullSeconds * 0.6);
+                supplySeconds = (int)(supplySeconds * 0.6);
+                productFullSeconds = (int)(productFullSeconds * 0.75);
+                productSeconds = (int)(productSeconds * 0.75);
+                boostCounter = boostTime;
+            }
+            else
+            {
+                supplyFullSeconds = (int)(supplyFullSeconds / 0.6);
+                supplySeconds = (int)(supplySeconds / 0.6);
+                productFullSeconds = (int)(productFullSeconds / 0.75);
+                productSeconds = (int)(productSeconds / 0.75);
+                boostCounter = 0;
+            }
+            isBoosted = !isBoosted;
+            updateUI();
         }
     }
 }
