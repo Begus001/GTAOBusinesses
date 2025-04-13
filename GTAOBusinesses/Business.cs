@@ -32,13 +32,12 @@ namespace GTAOBusinesses
         private Button boostBtn;
 
         private const int resupplyTime = 10 * 60 - 1;
-        private const int boostTime = 48 * 60 - 1;
+        private const int boostTime = 2 * 60 * 60 + 24 * 60 - 1;
         private int resupplyCounter = 0;
         private int boostCounter = 0;
 
         private readonly Timer timer = new Timer(1000);
         private readonly Timer resupplyTimer = new Timer(1000);
-        private readonly Timer boostTimer = new Timer(1000);
 
         public Business(int supplyFullSeconds, int productFullSeconds, ProgressBar supplyBar, ProgressBar productBar, Label supplyLabel, Label productLabel, Button resupplyBtn, Button sellBtn, Button boostBtn = null)
         {
@@ -53,21 +52,6 @@ namespace GTAOBusinesses
             resupplyTimer.Elapsed += resupplyTick;
             resupplyTimer.AutoReset = true;
             resupplyTimer.Start();
-
-            boostTimer.Elapsed += (_s, _e) =>
-            {
-				if (boostCounter <= 0 && isBoosted)
-				{
-					boostTimer.Stop();
-                    ToggleBoostAcid();
-				}
-				else if (!isPaused && isBoosted)
-				{
-					boostCounter--;
-				}
-			};
-            boostTimer.AutoReset = true;
-            boostTimer.Start();
 
             this.supplyBar = supplyBar;
             this.productBar = productBar;
@@ -86,44 +70,39 @@ namespace GTAOBusinesses
             return string.Format("{0:D2}:{1:D2}:{2:D2}", secs / 3600, secs / 60 % 60, secs % 60);
         }
 
-        private string clockFormatMin(int secs)
-        {
-            return string.Format("{0:D2}:{1:D2}", secs / 60 % 60, secs % 60);
-        }
-
         private void updateUI()
         {
-            Application.Current.Dispatcher.Invoke(() =>
+			Application.Current.Dispatcher.Invoke((Action)(() =>
             {
 				supplyBar.Maximum = supplyFullSeconds;
 				productBar.Maximum = productFullSeconds;
 				supplyBar.Value = supplySeconds;
-                productBar.Value = productFullSeconds - productSeconds;
+				productBar.Value = productFullSeconds - productSeconds;
 
-                supplyLabel.Content = clockFormat(supplySeconds);
-                productLabel.Content = clockFormat(productSeconds);
+				supplyLabel.Content = clockFormat(supplySeconds);
+				productLabel.Content = clockFormat(productSeconds);
 
                 if (supplySeconds <= 0 && !isBeingResupplied)
-                    resupplyBtn.Background = Brushes.DarkOrange;
+					resupplyBtn.Background = Brushes.DarkOrange;
                 else
-                    resupplyBtn.ClearValue(Control.BackgroundProperty);
+					resupplyBtn.ClearValue(Control.BackgroundProperty);
                 
                 if (productSeconds <= 0)
-                    sellBtn.Background = Brushes.MediumVioletRed;
+					sellBtn.Background = Brushes.MediumVioletRed;
                 else
-                    sellBtn.ClearValue(Control.BackgroundProperty);
+					sellBtn.ClearValue(Control.BackgroundProperty);
 
                 if (isBeingResupplied)
                 {
-                    supplyBar.Background = Brushes.LightGoldenrodYellow;
-                    resupplyBtn.Background = Brushes.LightGoldenrodYellow;
-                    resupplyBtn.Content = "Cancel";
-                    supplyLabel.Content += " (Supplies in " + clockFormat(resupplyCounter) + ")";
+					supplyBar.Background = Brushes.LightGoldenrodYellow;
+					resupplyBtn.Background = Brushes.LightGoldenrodYellow;
+					resupplyBtn.Content = "Cancel";
+					supplyLabel.Content += " (Supplies in " + clockFormat(resupplyCounter) + ")";
                 }
                 else
                 {
-                    supplyBar.ClearValue(Control.BackgroundProperty);
-                    resupplyBtn.Content = "Resupply";
+					supplyBar.ClearValue(Control.BackgroundProperty);
+					resupplyBtn.Content = "Resupply";
                 }
 
                 if (isAcid())
@@ -131,7 +110,7 @@ namespace GTAOBusinesses
 					if (isBoosted)
 					{
 						boostBtn.Background = Brushes.LightGoldenrodYellow;
-						boostBtn.Content = clockFormatMin(boostCounter);
+						boostBtn.Content = clockFormat(boostCounter);
 					}
 					else
 					{
@@ -139,7 +118,7 @@ namespace GTAOBusinesses
 						boostBtn.Content = "Boost";
 					}
 				}
-			});
+			}));
         }
 
         private void tick(object source, ElapsedEventArgs e)
@@ -148,6 +127,14 @@ namespace GTAOBusinesses
             {
                 supplySeconds--;
                 productSeconds--;
+				if (boostCounter <= 0 && isBoosted)
+				{
+                    ToggleBoostAcid();
+				}
+				else if (!isPaused && isBoosted)
+				{
+					boostCounter--;
+				}
             }
             updateUI();
         }
@@ -259,7 +246,6 @@ namespace GTAOBusinesses
         {
             timer.Stop();
             resupplyTimer.Stop();
-            boostTimer.Stop();
             isPaused = true;
         }
 
@@ -267,7 +253,6 @@ namespace GTAOBusinesses
         {
             timer.Start();
             resupplyTimer.Start();
-            boostTimer.Start();
             isPaused = false;
         }
 
