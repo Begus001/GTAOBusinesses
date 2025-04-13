@@ -32,7 +32,7 @@ namespace GTAOBusinesses
         private Button boostBtn;
 
         private const int resupplyTime = 10 * 60 - 1;
-        private const int boostTime = 2 * 60 * 60 + 24 * 60 - 1;
+        private const int boostTime = 1 * 60 * 60 - 1;
         private int resupplyCounter = 0;
         private int boostCounter = 0;
 
